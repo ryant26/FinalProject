@@ -1,7 +1,6 @@
 """
 This is the file that containes all of the code for the main interface 
 """
-import random
 from tkinter import *
 from tkinter import ttk
 root = Tk()
@@ -9,8 +8,7 @@ root = Tk()
 #Global Variables
 global grid_col_max
 global grid_row_max
-global frame_column
-global frame_row
+
 global number_of_days
 global hours_in_day
 global schedule
@@ -105,14 +103,6 @@ for i in range(grid_row_max+1):
 	root.rowconfigure(i, weight = 1, minsize = 50)
 
 #------------------------------------------grid all widgets------------------------------------------------
-#Frame
-#schedule_frame.grid(column = frame_column, row = frame_row, columnspan = 7, rowspan= 10) 
-
-#Size grip
-#size_grip.grid(row=8, column = 	13)
-
-#canvas
-#canvas.grid()
 
 #button
 create_new.grid(column= 0, row=0)
