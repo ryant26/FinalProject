@@ -25,7 +25,6 @@ hours_in_day = 10
 days_of_week = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 class ScheduleFrame():
-	#this is so we can reference certain frames!
 
 	def __init__(self, parent, Borderwidth, Relief):
 		"""
