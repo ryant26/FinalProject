@@ -68,7 +68,7 @@ create_new = ttk.Button(root, text='New Appointment', padding=(5,5,5,5))
 
 for i in range(number_of_days):
 	ttk.Label(text=str(days_of_week[i])).grid(row = 0, column = i+1)			#create the day Labels
-	for j in range(hours_in_day+1):
+	for j in range(hours_in_day):
 
 		#Create a frame for every hour of every day"
 		"""
@@ -91,7 +91,9 @@ for i in range(number_of_days):
 			schedule[days_of_week[i]].add(frame)
 		else:
 			schedule[days_of_week[i]].add(frame)
-		
+
+for i in range(hours_in_day):
+	ttk.Label(text=str(i+8)+':00').grid(column=0, row=i+1)		
 
 #-----------------------------------------re-size settings-----------------------------------------------
 
