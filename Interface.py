@@ -32,8 +32,31 @@ for i in range(0,canvas_height+1, canvas_height//hours_in_day):
 for i in range(0,canvas_width+1,canvas_width//number_of_days):
 	canvas.create_line(i, 0, i, canvas_height, tags =('grid', 'VirticleLines'))
 
-#grid all widgets
+#Create all the labels we will need
+sunday = ttk.Label(text='Sunday')
+monday = ttk.Label(text='Monday')
+tuesday = ttk.Label(text='Tuesday')
+wednesday = ttk.Label(text='Wednesday')
+thursday = ttk.Label(text="Thursday")
+friday = ttk.Label(text='Friday')
+saturday = ttk.Label(text = 'Saturday')
+
+#------------------------------------------grid all widgets------------------------------------------------
+#Frame
 frame.grid(column = 1, row = 1, columnspan = 7, rowspan= 10) 
+
+#canvas
 canvas.grid()
+#grid
 create_new.grid(column= 0, row=0)
+
+#days of the week
+sunday.grid(column=1, row=0)
+monday.grid(column=2, row=0)
+tuesday.grid(column=3, row=0)
+wednesday.grid(column=4, row=0)
+thursday.grid(column=5,row=0)
+friday.grid(column=6, row=0)
+saturday.grid(column=7, row=0)
+
 root.mainloop()	
