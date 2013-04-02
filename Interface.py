@@ -9,6 +9,8 @@ root = Tk()
 #Global Variables
 global canvas_width
 global canvas_height
+global canvas_column
+global canvas_row
 global number_of_days
 global hours_in_day
 
@@ -21,16 +23,16 @@ hours_in_day = 10
 create_new = ttk.Button(root, text='New Appointment', padding=(5,5,5,5))
 
 # Make frame to hold our canvas
-frame = ttk.Frame(root, relief = "sunken", borderwidth = 5, padding=(3,3,3,3))
+schedule_frame = ttk.Frame(root, relief = "sunken", borderwidth = 5, padding=(3,3,3,3))
 
 # Set up our Canvas
-canvas = Canvas(frame, width = canvas_width, height=canvas_height)
+canvas = Canvas(schedule_frame, width = canvas_width, height=canvas_height)
 
-#A loop to create a grid
-for i in range(0,canvas_height+1, canvas_height//hours_in_day):
-	canvas.create_line(0, i, canvas_width, i, tags=('grid', 'HorizontalLines'))
-for i in range(0,canvas_width+1,canvas_width//number_of_days):
-	canvas.create_line(i, 0, i, canvas_height, tags =('grid', 'VirticleLines'))
+#A loop to create a grid of frames
+days_of_week = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+for i in range(number_of_days):
+	for j in range(hours_in_day):
+		ttk.Frame(schedule_frame, relief='flat',labels= days_of_week[i], str(8+j)).grid(sticky=)
 
 #Create all the labels we will need
 sunday = ttk.Label(text='Sunday')
