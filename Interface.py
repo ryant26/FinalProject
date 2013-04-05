@@ -30,6 +30,9 @@ schedule_frame = ttk.Frame(root, relief = "sunken", borderwidth = 5, padding=(3,
 # Set up our Canvas
 #canvas = Canvas(schedule_frame, width = canvas_width, height=canvas_height)
 
+#set up a sizegrip
+size_grip = ttk.Sizegrip(root)
+
 #A loop to create a grid of frames
 days_of_week = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 for i in range(number_of_days):
@@ -39,13 +42,26 @@ for i in range(number_of_days):
 	for j in range(hours_in_day+1):
 		ttk.Frame(root, relief='solid', width = 70, height = 50, borderwidth = 1).grid(sticky='nwes', column = i+1, row = j+1, columnspan = 1, rowspan = 1)
 
+
+#-----------------------------------------re-size settings-----------------------------------------------
+
+for i in range(9):
+	root.columnconfigure(i, weight=1, minsize=60)
+for i in range(10)
+	root.rowconfigure(i, weight = 1, minsize = 60)
+
+
 #------------------------------------------grid all widgets------------------------------------------------
 #Frame
 schedule_frame.grid(column = frame_column, row = frame_row, columnspan = 7, rowspan= 10) 
 
+#Size grip
+sizegrip.grid()
+
 #canvas
 #canvas.grid()
-#grid
+
+#button
 create_new.grid(column= 0, row=0)
 
 root.mainloop()	
