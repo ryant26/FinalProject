@@ -3,6 +3,8 @@ This is the file that containes all of the code for the main interface
 """
 from tkinter import *
 from tkinter import ttk
+#import class
+import random
 
 
 #Global Variables
@@ -29,7 +31,7 @@ days_of_week = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
 
 class ScheduleFrame():
 
-	def __init__(self, parent, Borderwidth, Relief):
+	def __init__(self, parent, Borderwidth, Relief, start_time, end_time ,day):
 		"""
 		Initializes the frame
 		There are many more arguments that COULD be passed to a frame initializer 
@@ -41,6 +43,11 @@ class ScheduleFrame():
 		#initialize the TK frame with the values we want
 		self._frame = ttk.Frame(parent, borderwidth=Borderwidth, relief=Relief)
 		self._borderwidth = Borderwidth
+		self._course = None
+		self._color = None
+		self._start_time = start_time
+		self._end_time = end_time
+		self._day = day
 
 	def grid(self, Stickey, Row, Column):
 		"""
@@ -78,6 +85,28 @@ class ScheduleFrame():
 		else:
 			appointment_editor.destroy()
 			appointment_editor = Toplevel(root)
+	def markBusy(self, class_name, color):
+		"""
+		This functions fills in the frame if an appointment is added 
+		"""
+		global schedule
+
+		#Fill the frame with a random color if one is not provided 
+		if color == None:
+			r = str(hex(random.randint(0,16)))
+			g = str(hex(random.randint(0,16)))
+			b = str(hex(random.randint(0,16)))
+			self._color = '#'+r+g+b
+		else:									#otherwise we use the color provided
+			self._color = color
+		self._frame.configure(background=color)
+		self._frame.Label(text = class_name).grid(sticky = 'news')
+
+		if self._course._endtime > self._endtime:
+			for i in schedule[self._day]:
+				if i._start_time == self._endtime:
+					i.markBusy(class_name, self._color)
+			
 
 # ***THIS IS A DUMBY FUNCTION TO OPEN ANOTHER WINDOW***
 #this will be replaced by the caller to Brittany's code	
@@ -107,7 +136,7 @@ for i in range(number_of_days):
 
 		#Create a frame for every hour of every day"
 
-		frame = ScheduleFrame(root, 1, 'solid')
+		frame = ScheduleFrame(root, 1, 'solid', j+8, j+9, days_of_week[i])
 		frame.grid('nwes', j+1, i+1)
 
 		#Bind all the functions we want to each frame
