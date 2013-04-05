@@ -46,17 +46,16 @@ for i in range(number_of_days):
 #-----------------------------------------re-size settings-----------------------------------------------
 
 for i in range(9):
-	root.columnconfigure(i, weight=1, minsize=60)
-for i in range(10)
-	root.rowconfigure(i, weight = 1, minsize = 60)
-
+	root.columnconfigure(i, weight=1, minsize=50)
+for i in range(10):
+	root.rowconfigure(i, weight = 1, minsize = 40)
 
 #------------------------------------------grid all widgets------------------------------------------------
 #Frame
 schedule_frame.grid(column = frame_column, row = frame_row, columnspan = 7, rowspan= 10) 
 
 #Size grip
-sizegrip.grid()
+#size_grip.grid(row=8, column = 	13)
 
 #canvas
 #canvas.grid()
