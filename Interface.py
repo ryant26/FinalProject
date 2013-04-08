@@ -140,8 +140,6 @@ class ScheduleFrame():
 			self._bottomhalf.configure(background=color)
 
 
-
-
 	def split(self):
 		"""
 		If an appointment is added that goes on the half hour we have to split the frame
@@ -193,12 +191,23 @@ def markBusy(class_name, start, end, day, color):
 						i.markBusy(class_name, color, False, True)
 						markBusy(class_name, start+0.5, end, day, color)
 				else:
-						if start == i._start_time:
+						if start == i._start_time: 
 							i.split()
 							i.markBusy(class_name, color, True, False)
 						else:
 							i.split()
 							i.markBusy(class_name, color, False, True)
+
+def markAvailable(start, end, day):
+	global schedule
+
+	duration = end - start
+	if duration >0:
+		for i in schedule[day]:
+			#recursive call to the function to delete the appointment
+			if duration > 0.5:
+				if start ==i._start_time:
+					pass
 
 
 # ***THIS IS A DUMBY FUNCTION TO OPEN ANOTHER WINDOW***
