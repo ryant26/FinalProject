@@ -98,6 +98,7 @@ class ScheduleFrame():
 		if top == False and bottom == False:	
 			self._frame.configure(background=color)
 			self._name = ttk.Label(self._frame, text = class_name, background=color)
+			self._name.grid(row = 0, column=0)
 			#Bind all the functions we want to each frame
 			self._name.bind('<Double-Button-1>', self.appointmentEditor)
 
@@ -106,32 +107,40 @@ class ScheduleFrame():
 
 			#appointments ends in this frame
 			self._tophalf.configure(background=color)
-			self._name = ttk.Label(self._tophalf, text = class_name, background=color)
+			self._topname = ttk.Label(self._tophalf, text = class_name, background=color)
 			self._tophalf_busy = True
+			self._topname.grid(column=0, row=0)
 			#Bind all the functions we want to each frame
-			self._name.bind('<Double-Button-1>', self.appointmentEditor)
+			self._topname.bind('<Double-Button-1>', self.appointmentEditor)
 
 		#appointment begins in this frame	
 		else:
 			self._bottomhalf.configure(background=color)
-			self._name = ttk.Label(self._bottomhalf, text = class_name, background=color)
+			self._bottomname = ttk.Label(self._bottomhalf, text = class_name, background=color)
 			self._bottomhalf_busy = True
+			self._bottomname.grid(column=0, row=0)
 			#Bind all the functions we want to each frame
-			self._name.bind('<Double-Button-1>', self.appointmentEditor)
+			self._bottomname.bind('<Double-Button-1>', self.appointmentEditor)
 
-		self._name.grid(row=0, column=0)
 		self._name_appt = class_name
 
-	def markAvailable(self):
-		 """
-		 This function resets the color in the frame when an appointment is removed
-		 """
-		 global schedule
+	def markAvailable(self, top, bottom):
+		"""
+		This function resets the color in the frame when an appointment is removed
+		"""
+		global schedule
 
-		 color = 'grey'
-		 if self._tophalf_busy == False and self._bottomhalf_busy == False:
-			 self._frame['background'] = 'grey'
-			
+		color = 'white'
+		if top == False and self._bottom == False:
+		 self._frame.configure(background=color)
+
+		if top == True:
+			self._tophalf.configure(background=color)
+		if bottom = True:
+			self._bottomhalf.configure(background=color)
+
+
+
 
 	def split(self):
 		"""
@@ -156,14 +165,6 @@ class ScheduleFrame():
 		self._bottomhalf.columnconfigure(0, minsize=70, weight=1)
 		self._bottomhalf.rowconfigure(0, minsize=25, weight=1)
 
-
-		#Have to bind the appropiate functions to the top and bottom half of the frame now
-		"""
-		for i in (self._tophalf, self._bottomhalf):
-			i.bind('<Enter>', self.hover)
-			i.bind('<Leave>', self.leave)
-			i.bind('<Double-Button-1>', self.appointmentEditor)
-		"""
 
 	def destroySplit(self):
 		"""
