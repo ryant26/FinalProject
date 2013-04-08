@@ -1,5 +1,5 @@
 import random
-import Interface
+
 
 class Course:
     """
@@ -31,20 +31,11 @@ class Course:
         self.days = info[2]
 
         # insert into collection of instances
-        
         for i in self.days:
             if i in Course._instances:
                 Course._instances[i].append(self)
             else:
-                Course._instances[i] = [self]
-
-        r = str(hex(random.randint(0,16))[2])
-        g = str(hex(random.randint(0,16))[2])
-        b = str(hex(random.randint(0,16))[2])
-        self._color = '#'+r+g+b
-        
-        for i in self.days:
-            Interface.markBusy(self.name, self.start, self.end, i, self._color)
+                Course._instances[i]=[self]
 
     def get_start_time(self):
         return self.start
@@ -52,7 +43,7 @@ class Course:
     def get_end_time(self):
         return self.end
 
-    def get_all_instances(self):
+    def get_all_instances():
         """
         Gets all instances of Course class, allows
         for you to be able to find all possible
@@ -104,7 +95,11 @@ class Course:
             if i in self.days:
                 self.days.remove(i)
 
-        
+    def get_name(self):
+        return self.name
+
+    def get_days(self):
+        return self.days
 
     def each_day(self):
         """
@@ -173,7 +168,6 @@ Course.save([course, course2])
 load()
 
 
-Interface.root.mainloop()
 """
 if __name__ == "__main__":
     import doctest

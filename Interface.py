@@ -5,6 +5,7 @@ from tkinter import *
 from tkinter import ttk
 import random
 import menu
+import course
 
 #Global Variables
 global grid_col_max
@@ -27,6 +28,8 @@ number_of_days = 7
 hours_in_day = 10
 days_of_week = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 appointment_editor = None
+
+#-----------------------------------------------------------Schedule Frame Class---------------------------------------------------------
 
 class ScheduleFrame():
 
@@ -84,7 +87,7 @@ class ScheduleFrame():
 		#find a better solution than putting it twice? 
 		global appointment_editor
 		if appointment_editor == None:
-			menu.MenuWin(self._name_appt, (str(self._start_time)+':00', str(self._end_time)+':00'), [self._day])
+			MenuWin(self._name_appt, (str(self._start_time)+':00', str(self._end_time)+':00'), [self._day])
 		else:
 			appointment_editor.destroy()
 			appointment_editor = Toplevel(root)
@@ -136,7 +139,7 @@ class ScheduleFrame():
 
 		if top == True:
 			self._tophalf.configure(background=color)
-		if bottom = True:
+		if bottom == True:
 			self._bottomhalf.configure(background=color)
 
 
@@ -173,6 +176,126 @@ class ScheduleFrame():
 
 		self._tophalf = None
 		self._bottomhalf = None
+
+#-----------------------------------Appointment Editor---------------------------------------------------
+
+def MenuWin(name_c, time_list, day_list):
+    """
+Initializes the toplevel menu window, calling each seperate function that
+    """
+    win = Toplevel()
+    win.title(string= "Class Editor")
+    menu_ttl = Label(win, text = "Course Information")
+    menu_ttl.grid(column=1, row=0, pady=5)
+    course_name = Course_Input(win, name_c)
+    Days = set_days(win, day_list)
+    Times = set_times(win, time_list)
+    save = Button(win, text = "SAVE", command = lambda: save_contents(Days, course_name, Times))
+    save.grid(column=5, row=6)
+    clear = Button(win, text = "CLEAR", command = lambda: clear_contents(Days, course_name, Times))
+
+    clear.grid(column=3, row=6)
+
+def Course_Input(win, title):
+    name = Label(win, text = "Course Name:")
+    name.grid(column=0, row=2)
+    enter = Entry(win, relief = 'sunken')
+    course = StringVar()
+    course.set(title)
+    enter["textvariable"] = course
+    enter.grid(column=1, row=2)
+
+    return course
+
+def set_days(win, day_list):
+    Days = {
+        'Monday':0,
+        'Tuesday':0,
+        'Wednesday':0,
+        'Thursday':0,
+        'Friday':0
+        }
+            
+
+    List_Days = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+    counter=0
+    for key in List_Days:
+        Days[key] = IntVar()
+        if key in day_list:
+            Days[key].set(1)
+        CheckBox = Checkbutton(win, text = key, variable = Days[key])
+        CheckBox.grid(column=counter, row=3)
+        counter = counter + 1
+
+    return Days
+
+def set_times(win, time_list):
+    (start_time, end_time) = time_list
+    time_1 = StringVar()
+    time_1.set(start_time)
+    start = Label(win, text = "Enter Start Time:")
+    start.grid(column=0, row=4)
+
+    time_start = OptionMenu(win, time_1, '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30', '24:00')
+    time_start.grid(column=1, row=4)
+
+
+    time_2 = StringVar()
+    time_2.set(end_time)
+    end = Label(win, text = "Enter End Time:")
+    end.grid(column=0, row=5)
+    
+    time_end = OptionMenu(win, time_2, '8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30', '24:00')
+    time_end.grid(column=1, row=5)
+
+    time_list = (time_1, time_2)
+    
+    return time_list
+
+def save_contents(course_name, Times, Days):
+    info = get_contents(course_name, Times, Days)
+    clear_contents(Days, course_name, Times)
+
+
+    return info
+    
+def get_contents(course_name, Times, Days):
+    name_c = course_name.get()
+    day_list = [ ]
+    for key, value in Days.items():
+        state = value.get()
+        if state != 0:
+            day_list.append(key)
+            Days[key].set(0)
+    (time_1, time_2) = Times
+    time_start = time_1.get()
+    time_end = time_2.get()
+
+    start = time_start.split(':')
+    end = time_end.split(':')
+    if start[1] != '00':
+        start = start[0] +'.5'
+    else:
+        start = start[0]
+    if end[1] != '00':
+        end = end[0] + '.5'
+    else: 
+        end = end[0]
+    start = float(start)
+    end = float(end)
+    time_list = (start, end)
+    info = (name_c, time_list, day_list)
+    return info
+    
+def clear_contents(Days, course_name, Times):
+    course_name.set('Enter Class Name')
+    (time_1, time_2) = Times
+    time_1.set('8:00')
+    time_2.set('12:00')
+    for key, value in Days.items():
+        Days[key].set(0)
+
+#------------------------------------------------Logic Functions-----------------------------------------------------
 
 def markBusy(class_name, start, end, day, color):
 	global schedule
@@ -219,10 +342,23 @@ def appointmentEditor():
 	"""
 	global appointment_editor
 	if appointment_editor == None:
-		menu.MenuWin("Enter Class Name",('8:00', '12:00'), [ ])
+		MenuWin("Enter Class Name",('8:00', '12:00'), [ ])
 	else:
 		appointment_editor.destroy()
 		appointment_editor = Toplevel(root)
+def loadText():
+	"""
+	This function loads in the text file, supposed to be called at the beggining of the program
+	"""
+	course.load()
+	for i in course.Course.get_all_instances():
+		for j in i:
+			r = str(hex(random.randint(0,16))[2])
+			g = str(hex(random.randint(0,16))[2])
+			b = str(hex(random.randint(0,16))[2])
+			color = '#'+r+g+b
+			for x in j.get_days():
+				markBusy(j.get_name(), j.get_start_time(), j.get_end_time(), x, color)
 
 # Buttons we will need
 
@@ -264,6 +400,7 @@ for i in range(hours_in_day):
 """
 This is the test code section because scrolling through all of cody's doctests is probably the most painfull experience of my life
 """
+loadText()
 #-----------------------------------------re-size settings-----------------------------------------------
 
 #Loop through all rows and columns and allow them to be resized
@@ -277,4 +414,4 @@ for i in range(grid_row_max+1):
 #button
 create_new.grid(column= 0, row=0)
 
-#root.mainloop()	
+root.mainloop()	
