@@ -39,7 +39,7 @@ class ScheduleFrame():
 
 		"""
 		#initialize the TK frame with the values we want
-		self._frame = ttk.Frame(parent, borderwidth=Borderwidth, relief=Relief)
+		self._frame = Frame(parent, borderwidth=Borderwidth, relief=Relief, bg = 'white')
 		self._borderwidth = Borderwidth
 		self._course = None
 		self._color = None
@@ -92,26 +92,25 @@ class ScheduleFrame():
 		This functions fills in the frame if an appointment is added. If the appointment ends on the half hour in this frame
 		it will fill the top half. If an appointment starts in this frame it will fill the bottom half.  
 		"""
-		
-
-
+		print(self._start_time, self._end_time)
+		print(self._frame)
 		#appointment ends on the hour, fill the whole frame
 		if top == False and bottom == False:	
-			self._frame['background'] = color
-			self._frame.Label(text = class_name).grid(sticky = 'news')
+			self._frame.configure(background='black')
+			self._name = ttk.Label(self._frame, text = class_name).grid(sticky = 'news')
 
 		#appointment ends or begins on half hour
 		elif top == True:
 
 			#appointments ends in this frame
-			self._tophalf['background'] = color
-			self._tophalf.Label(text = class_name).grid(sticky = 'news')
+			self._tophalf.configure(background=color)
+			self._name = ttk.Label(self._frame, text = class_name).grid(sticky = 'news')
 			self._tophalf_busy = True
 
 		#appointment begins in this frame	
 		else:
-			self._bottomhalf['background'] = color
-			self._bottomhalf.Label(text = class_name).grid(sticky = 'news')
+			self._bottomhalf.configure(background=color)
+			self._name = ttk.Label(self._frame, text = class_name).grid(sticky = 'news')
 			self._bottomhalf_busy = True
 
 		
@@ -137,8 +136,8 @@ class ScheduleFrame():
 			self._frame.rowconfigure(i, weight=1, minsize=25)
 
 		#Put two smaller frames in the schedule frame and set options
-		self._tophalf = ttk.Frame(self._frame, relief='solid', borderwidth = 1).grid(row = 0, column = 0)
-		self._bottomhalf = ttk.Frame(self._frame, relief='solid', borderwidth = 1).gird(row = 1, column=0)
+		self._tophalf = Frame(self._frame, relief='solid', borderwidth = 1).pack(row = 0, column = 0)
+		self._bottomhalf = Frame(self._frame, relief='solid', borderwidth = 1).pack(row = 1, column=0)
 
 		#Have to bind the appropiate functions to the top and bottom half of the frame now
 		for i in (self._tophalf, self._bottomhalf):
@@ -160,24 +159,29 @@ def markBusy(class_name, start, end, day, color):
 	global schedule
 
 	duration = end - start
-
-	for i in schedule[day]:
-		#recursive call to the funciton if the appointment spans multiple frames
-		if start >= i._start_time and start <= i._end_time:
-			if duration > 0.5:
-				if start == i._start_time:
-					i.markBusy(class_name, color, False, False)
-					markBusy(class_name,start-1, end, day, color)
-				else:
-					i.split()
-					i.markBusy(class_name, color, False, True)
-					markBusy(class_name, start-0.5, end, day, color)
-			else:
-				if duration >=0: 
+	if duration > 0:
+		for i in schedule[day]:
+			#recursive call to the funciton if the appointment spans multiple frames
+			if start >= i._start_time and start < i._end_time:
+				print("Class start")
+				print(start)
+				print("frame start")
+				print(i._start_time)
+				if duration > 0.5:
 					if start == i._start_time:
-						i.markBusy(class_name, color, True, False)
+						i.markBusy(class_name, color, False, False)
+						markBusy(class_name,start+1, end, day, color)
 					else:
+						i.split()
 						i.markBusy(class_name, color, False, True)
+						markBusy(class_name, start+0.5, end, day, color)
+				else:
+						if start == i._start_time:
+							i.split()
+							i.markBusy(class_name, color, True, False)
+						else:
+							i.split()
+							i.markBusy(class_name, color, False, True)
 
 
 # ***THIS IS A DUMBY FUNCTION TO OPEN ANOTHER WINDOW***
@@ -229,6 +233,13 @@ for i in range(number_of_days):
 #This loop prints the labels (time of day) along the left side of the schedule 
 for i in range(hours_in_day):
 	ttk.Label(text=str(i+8)+':00').grid(column=0, row=i+1)		
+
+#----------------------------------------------TEST CODE -------------------------------------------------------
+"""
+This is the test code section because scrolling through all of cody's doctests is probably the most painfull experience of my life
+"""
+
+markBusy('get it', 9, 15, 'Wednesday', 'black')
 
 #-----------------------------------------re-size settings-----------------------------------------------
 
