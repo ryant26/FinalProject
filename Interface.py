@@ -48,6 +48,8 @@ class ScheduleFrame():
 		self._day = day
 		self._tophalf = None
 		self._bottomhalf = None
+		self._tophalf_busy = False
+		self._bottomhalf_busy = False
 
 	def grid(self, Stickey, Row, Column):
 		"""
@@ -113,11 +115,13 @@ class ScheduleFrame():
 			if self._course._endtime <= self._endtime:
 				self._tophalf.configure(background=color)
 				self._tophalf.Label(text = class_name).grid(sticky = 'news')
+				self._tophalf_busy = True
 
 			#appointment begins in this frame	
 			else:
 				self._bottomhalf.configure(background=color)
 				self._bottomhalf.Label(text = class_name).grid(sticky = 'news')
+				self._bottomhalf_busy = True
 
 		#recursive call to the funciton if the appointment spans multiple frames
 		if self._course._endtime > self._endtime:
@@ -131,9 +135,9 @@ class ScheduleFrame():
 		 global schedule
 
 		 color = 'grey'
-		 if self._tophalf == None and self._bottomhalf == None:	
-			self._frame.configure(background=color)
-			self._frame.
+		 if self._tophalf_busy == False and self._bottomhalf_busy == False:
+		 	self._frame.configure(background=color)
+			
 
 	def split(self):
 		"""
