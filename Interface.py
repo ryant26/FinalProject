@@ -87,47 +87,35 @@ class ScheduleFrame():
 		else:
 			appointment_editor.destroy()
 			appointment_editor = Toplevel(root)
-	def markBusy(self, class_name, color):
+	def markBusy(self, class_name, color, top, bottom):
 		"""
 		This functions fills in the frame if an appointment is added. If the appointment ends on the half hour in this frame
 		it will fill the top half. If an appointment starts in this frame it will fill the bottom half.  
 		"""
-		global schedule
+		
 
-		#Fill the frame with a random color if one is not provided 
-		if color == None:
-			r = str(hex(random.randint(0,16)))
-			g = str(hex(random.randint(0,16)))
-			b = str(hex(random.randint(0,16)))
-			self._color = '#'+r+g+b
-		else:									#otherwise we use the color provided
-			self._color = color
 
 		#appointment ends on the hour, fill the whole frame
-		if self._tophalf == None and self._bottomhalf == None:	
+		if top == False and bottom == False:	
 			self._frame.configure(background=color)
 			self._frame.Label(text = class_name).grid(sticky = 'news')
 
 		#appointment ends or begins on half hour
-		else:
+		elif top == True:
 
 			#appointments ends in this frame
-			if self._course._endtime <= self._endtime:
-				self._tophalf.configure(background=color)
-				self._tophalf.Label(text = class_name).grid(sticky = 'news')
-				self._tophalf_busy = True
+			self._tophalf.configure(background=color)
+			self._tophalf.Label(text = class_name).grid(sticky = 'news')
+			self._tophalf_busy = True
 
-			#appointment begins in this frame	
-			else:
-				self._bottomhalf.configure(background=color)
-				self._bottomhalf.Label(text = class_name).grid(sticky = 'news')
-				self._bottomhalf_busy = True
+		#appointment begins in this frame	
+		else:
+			self._bottomhalf.configure(background=color)
+			self._bottomhalf.Label(text = class_name).grid(sticky = 'news')
+			self._bottomhalf_busy = True
 
-		#recursive call to the funciton if the appointment spans multiple frames
-		if self._course._endtime > self._endtime:
-				for i in schedule[self._day]:
-					if i._start_time == self._endtime:
-						i.markBusy(class_name, self._color)
+		
+
 	def markAvailable(self):
 		 """
 		 This function resets the color in the frame when an appointment is removed
@@ -168,6 +156,29 @@ class ScheduleFrame():
 		self._tophalf = None
 		self._bottomhalf = None
 
+def markBusy(class_name, start, end, day, color):
+	global schedule
+
+	duration = end - start
+
+	for i in schedule[day]:
+		for x in i:
+			#recursive call to the funciton if the appointment spans multiple frames
+			if start >= i._start_time and start <= i._endtime:
+				if duraion > 0.5:
+					if start == i._start_time:
+						i.markBusy(class_name, color, False, False)
+						markBusy(class_name,start-1, end, day, color)
+					else:
+						i.split()
+						i.markBusy(class_name, color, False, True)
+						markBusy(class_name, start-0.5, end, day, color)
+				else:
+					if duration >=0: 
+						if start == i._start_time:
+							i.markBusy(class_name, color, True, False)
+						else:
+							i.markBusy(class_name, color, False, True)
 
 
 # ***THIS IS A DUMBY FUNCTION TO OPEN ANOTHER WINDOW***
