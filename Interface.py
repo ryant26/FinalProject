@@ -162,23 +162,22 @@ def markBusy(class_name, start, end, day, color):
 	duration = end - start
 
 	for i in schedule[day]:
-		for x in i:
-			#recursive call to the funciton if the appointment spans multiple frames
-			if start >= i._start_time and start <= i._endtime:
-				if duraion > 0.5:
-					if start == i._start_time:
-						i.markBusy(class_name, color, False, False)
-						markBusy(class_name,start-1, end, day, color)
-					else:
-						i.split()
-						i.markBusy(class_name, color, False, True)
-						markBusy(class_name, start-0.5, end, day, color)
+		#recursive call to the funciton if the appointment spans multiple frames
+		if start >= i._start_time and start <= i._endtime:
+			if duraion > 0.5:
+				if start == i._start_time:
+					i.markBusy(class_name, color, False, False)
+					markBusy(class_name,start-1, end, day, color)
 				else:
-					if duration >=0: 
-						if start == i._start_time:
-							i.markBusy(class_name, color, True, False)
-						else:
-							i.markBusy(class_name, color, False, True)
+					i.split()
+					i.markBusy(class_name, color, False, True)
+					markBusy(class_name, start-0.5, end, day, color)
+			else:
+				if duration >=0: 
+					if start == i._start_time:
+						i.markBusy(class_name, color, True, False)
+					else:
+						i.markBusy(class_name, color, False, True)
 
 
 # ***THIS IS A DUMBY FUNCTION TO OPEN ANOTHER WINDOW***
