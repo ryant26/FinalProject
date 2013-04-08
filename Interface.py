@@ -4,7 +4,6 @@ This is the file that containes all of the code for the main interface
 from tkinter import *
 from tkinter import ttk
 import random
-import menu
 import course
 
 #Global Variables
@@ -157,6 +156,9 @@ class ScheduleFrame():
 		#Put two smaller frames in the schedule frame and set options
 		self._tophalf = Frame(self._frame, relief='solid', borderwidth = 1, background='white')
 		self._bottomhalf = Frame(self._frame, relief='solid', borderwidth = 1, background='white')
+		self._tophalf.bind('<Double-Button-1>', self.appointmentEditor)
+		self._bottomhalf.bind('<Double-Button-1>', self.appointmentEditor)
+
 
 		#Set up the two split frames to take up half the area of the main frame
 		self._tophalf.grid(column=0, row=0, sticky='nsew')
