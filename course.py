@@ -1,4 +1,5 @@
-#import numpy
+import numpy
+
 
 class Course:
     """
@@ -8,6 +9,7 @@ class Course:
     >>> course = Course(("ECE 212", ['8:00', '9:00'], ["Monday", "Wednesday", "Friday"]))
     >>> course.name == "ECE 212"
     True
+    >>> print(Course._instances)
     >>> course.start
     '8:00'
     >>> course.end
@@ -17,12 +19,43 @@ class Course:
     >>> course.each_day()
     [('Monday', '8:00', '9:00'), ('Wednesday', '8:00', '9:00'), ('Friday', '8:00', '9:00')]
     """
+
+
+    _instances = {}
+
     def __init__(self, info):
         self.name = info[0]
         times = info[1]
         self.start = times[0]
         self.end = times[1]
         self.days = info[2]
+        
+
+        # insert into collection of instances
+        """
+	for i in self.days:
+		if i in Course._instances:
+			Course._instances[i].append(self)
+		else:
+			Course._instances[i] = [self]
+        """
+    def get_all_instances(self):
+        """
+        Gets all instances of Course class, allows
+        for you to be able to find all possible
+        courses in current schedule
+        """
+        return [i for i in Course._instances.values()]
+
+    def del_instance(self, i):
+        """
+        Deletes an instance of Course, specified by object handler.
+        If no instance, specifically returns NONE
+        """
+        if i in self._instances:
+            del(Person._instances[i])
+        else:
+            return None
 
     def change_time(self, start, end):
         """
@@ -74,16 +107,18 @@ class Course:
             per_day.append((i, self.start, self.end))
         return per_day
     
-   # def save(self):
+    def save(self):
         """
         Saves a course object by it's data into a text file.
         Used to restore data from previous session on startup
         NOTE
         Must have numpy module installed
+	>>> course = Course(("ECE 212", ["8:00", "9:00"], ["Monday", "Wednesday", "Friday"]))
+    	>>> course.save()
         """
-       # numpy.savetxt(save.txt, course.name)
-       # numpy.savetxt(save.txt, [course.start, course.end])
-       # numpy.savetxt(save.txt, course.days, newline = '\n')
+        numpy.savetxt('save2.txt', self.name)
+        np.savetxt(save2.txt, [self.start, self.end])
+        np.savetxt(save2.txt, self.days, newline = '\n')
 
 #def load():
     """
