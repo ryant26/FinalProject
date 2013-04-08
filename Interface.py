@@ -362,7 +362,7 @@ def loadText():
 			for x in j.get_days():
 				markBusy(j.get_name(), j.get_start_time(), j.get_end_time(), x, color)
 
-# Buttons we will need
+#-----------------------------------------------------Body of Code -------------------------------------------------------------------------
 
 #This is to create a new appointment
 create_new = ttk.Button(root, text='New Appointment', padding=(5,5,5,5), command=appointmentEditor)
