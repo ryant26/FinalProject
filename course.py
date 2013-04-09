@@ -36,6 +36,11 @@ class Course:
                 Course._instances[i].append(self)
             else:
                 Course._instances[i]=[self]
+    def get_name(self):
+        return self.name
+
+    def get_days(self):
+        return self.days
 
     def get_start_time(self):
         return self.start
@@ -94,12 +99,6 @@ class Course:
         for i in deleted:
             if i in self.days:
                 self.days.remove(i)
-
-    def get_name(self):
-        return self.name
-
-    def get_days(self):
-        return self.days
 
     def each_day(self):
         """
@@ -162,10 +161,9 @@ def load():
         days = days.split()
         course = Course((i[0], times, days))
         
-course = Course(("ECE 212", [12,13], ["Monday", "Wednesday", "Friday"]))
-course2 = Course(("CMPUT 272", [12.5,14], ["Tuesday", "Thursday"]))
-Course.save([course, course2])
-load()
+#course = Course(("ECE 212", [12,13], ["Monday", "Wednesday", "Friday"]))
+#course2 = Course(("CMPUT 272", [12.5,14], ["Tuesday", "Thursday"]))
+#Course.save([course, course2])
 
 
 """
