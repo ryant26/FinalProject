@@ -119,48 +119,63 @@ class Course:
             per_day.append((i, self.start, self.end))
         return per_day
     
-    def save(self):
+    def save(courses):
         """
-        Saves a course object by it's data into a text file.
+        Saves a list of course objects by their data into a text file.
         Used to restore data from previous session on startup
-
- 	>>> course = Course(("ECE 212", ["8:00", "9:00"], ["Monday", "Wednesday", "Friday"]))
-    	>>> course.save()
+        courses = [course objects]
         """
+        
         opened = open("save.txt", 'w')
-        st_start = str(self.start)
-        st_end = str(self.end)
-
-        opened.write(self.name)
-        opened.write(st_start)
-        opened.write(st_end)
-        for i in self.days:
-            opened.write(i)
-        opened.write('/n')
+        for i in courses:
+            st_start = str(i.start)
+            st_end = str(i.end)
+            #opened.write('[')
+            opened.write(i.name)
+            opened.write('] ')
+            opened.write(st_start)
+            opened.write(' ')
+            opened.write(st_end)
+            opened.write('] ')
+            for x in i.days:
+                opened.write(x)
+                opened.write(' ')
+            opened.write(']')
+            opened.write('\n')
         opened.close()
             
 
 
-#def load():
+def load():
     """
     Loads from a text file as many previously used
     instances of a course as are contained in the text file.
     This is done on startup to recreate the environment
-    from previous shutdown. Will need to be iterated over
-    in order to recreate all courses
-    
-    >>> course = Course(("ECE 212", ["8:00", "9:00"], ["Monday", "Wednesday", "Friday"]))
-    >>> course.save
-    >>> for x in load(): print(x)
-    ("ECE 212", ["8:00", "9:00"], ["Monday", "Wednesday", "Friday"])
+    from previous shutdown.
     
     """
     opened = open("save.txt", 'r')
     all_courses = opened.readlines()
     for i in all_courses:
-        pass
+        i = i.split(']')
+        name = i[0]
+        times = i[1]
+        times = times.split()
+        times[0] = float(times[0])
+        times[1] = float(times[1])
+        days = i[2]
+        days = days.split()
+        course = Course((i[0], times, days))
         
-    
+course = Course(("ECE 212", [12,13], ["Monday", "Wednesday", "Friday"]))
+course2 = Course(("CMPUT 272", [12.5,14], ["Tuesday", "Thursday"]))
+Course.save([course, course2])
+load()
+
+
+Interface.root.mainloop()
+"""
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
+"""
