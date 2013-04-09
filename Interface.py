@@ -192,7 +192,7 @@ Initializes the toplevel menu window, calling each seperate function that
     course_name = Course_Input(win, name_c)
     Days = set_days(win, day_list)
     Times = set_times(win, time_list)
-    save = Button(win, text = "SAVE", command = lambda: save_contents(Days, course_name, Times))
+    save = Button(win, text = "SAVE", command = lambda: save_contents(course_name, Times, Days))
     save.grid(column=5, row=6)
     clear = Button(win, text = "CLEAR", command = lambda: clear_contents(Days, course_name, Times))
 
@@ -255,6 +255,7 @@ def set_times(win, time_list):
     return time_list
 
 def save_contents(course_name, Times, Days):
+    print("SAVING!!!")
     info = get_contents(course_name, Times, Days)
     clear_contents(Days, course_name, Times)
 
