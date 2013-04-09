@@ -4,6 +4,7 @@ This is the file that containes all of the code for the main interface
 from tkinter import *
 from tkinter import ttk
 import random
+import menu
 
 #Global Variables
 global grid_col_max
@@ -83,7 +84,7 @@ class ScheduleFrame():
 		#find a better solution than putting it twice? 
 		global appointment_editor
 		if appointment_editor == None:
-			appointment_editor = Toplevel(root)
+			menu.MenuWin("Enter Class Name", (str(self._start_time)+':00', str(self._end_time)+':00'), [self._day])
 		else:
 			appointment_editor.destroy()
 			appointment_editor = Toplevel(root)
@@ -92,8 +93,7 @@ class ScheduleFrame():
 		This functions fills in the frame if an appointment is added. If the appointment ends on the half hour in this frame
 		it will fill the top half. If an appointment starts in this frame it will fill the bottom half.  
 		"""
-		print(self._start_time, self._end_time)
-		print(self._frame)
+
 		#appointment ends on the hour, fill the whole frame
 		if top == False and bottom == False:	
 			self._frame.configure(background=color)
@@ -174,10 +174,6 @@ def markBusy(class_name, start, end, day, color):
 		for i in schedule[day]:
 			#recursive call to the funciton if the appointment spans multiple frames
 			if start >= i._start_time and start < i._end_time:
-				print("Class start")
-				print(start)
-				print("frame start")
-				print(i._start_time)
 				if duration > 0.5:
 					if start == i._start_time:
 						i.markBusy(class_name, color, False, False)
@@ -204,7 +200,7 @@ def appointmentEditor():
 	"""
 	global appointment_editor
 	if appointment_editor == None:
-		appointment_editor = Toplevel(root)
+		menu.MenuWin("Enter Class Name",('8:00', '12:00'), [ ])
 	else:
 		appointment_editor.destroy()
 		appointment_editor = Toplevel(root)
@@ -265,4 +261,4 @@ for i in range(grid_row_max+1):
 #button
 create_new.grid(column= 0, row=0)
 
-#root.mainloop()	
+root.mainloop()	
