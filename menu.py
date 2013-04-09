@@ -73,24 +73,24 @@ def set_times(win, time_list):
     
     return time_list
 
-def save_contents(Days, course_name, Times):
+def save_contents(course_name, Times, Days):
+    info = get_contents(course_name, Times, Days)
+    clear_contents(Days, course_name, Times)
+
+
+    return info
+    
+def get_contents(course_name, Times, Days):
     name_c = course_name.get()
-    course_name.set('Enter Class Name')
-    print(name_c)
     day_list = [ ]
     for key, value in Days.items():
         state = value.get()
         if state != 0:
             day_list.append(key)
             Days[key].set(0)
-
     (time_1, time_2) = Times
-
     time_start = time_1.get()
-    time_1.set('8:00')
-
     time_end = time_2.get()
-    time_2.set('12:00')
 
     start = time_start.split(':')
     end = time_end.split(':')
@@ -105,15 +105,8 @@ def save_contents(Days, course_name, Times):
     start = float(start)
     end = float(end)
     time_list = (start, end)
-    print(time_list)
-
-
-    print("Start:", time_start)
-    print("End:", time_end)
-    print(day_list)
-
-    course = (name_c, time_list, day_list)
-    return course
+    info = (name_c, time_list, day_list)
+    return info
     
 def clear_contents(Days, course_name, Times):
     course_name.set('Enter Class Name')
