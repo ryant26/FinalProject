@@ -96,21 +96,21 @@ class ScheduleFrame():
 		print(self._frame)
 		#appointment ends on the hour, fill the whole frame
 		if top == False and bottom == False:	
-			self._frame.configure(background='black')
-			self._name = ttk.Label(self._frame, text = class_name).grid(sticky = 'news')
+			self._frame.configure(background=color)
+			self._name = ttk.Label(self._frame, text = class_name).grid(row=0, column=0)
 
 		#appointment ends or begins on half hour
 		elif top == True:
 
 			#appointments ends in this frame
 			self._tophalf.configure(background=color)
-			self._name = ttk.Label(self._frame, text = class_name).grid(sticky = 'news')
+			self._name = ttk.Label(self._tophalf, text = class_name).grid(row=0, column=0)
 			self._tophalf_busy = True
 
 		#appointment begins in this frame	
 		else:
 			self._bottomhalf.configure(background=color)
-			self._name = ttk.Label(self._frame, text = class_name).grid(sticky = 'news')
+			self._name = ttk.Label(self._bottomhalf, text = class_name).grid(row=0, column=0)
 			self._bottomhalf_busy = True
 
 		
@@ -130,20 +130,31 @@ class ScheduleFrame():
 		"""
 		If an appointment is added that goes on the half hour we have to split the frame
 		"""
+		#self._frame.configure(background='yellow')
+
 		#set up the frame to be resizeable
 		self._frame.columnconfigure(0, weight = 1, minsize = 70)
 		for i in (0,1):
 			self._frame.rowconfigure(i, weight=1, minsize=25)
 
 		#Put two smaller frames in the schedule frame and set options
-		self._tophalf = Frame(self._frame, relief='solid', borderwidth = 1).pack(row = 0, column = 0)
-		self._bottomhalf = Frame(self._frame, relief='solid', borderwidth = 1).pack(row = 1, column=0)
+		self._tophalf = Frame(self._frame, relief='solid', borderwidth = 1, background='yellow', weight=1)
+		self._bottomhalf = Frame(self._frame, relief='solid', borderwidth = 1, background='yellow')
+
+		#Set up the two split frames to take up half the area of the main frame
+		self._tophalf.grid(column=0, row=0)
+		self._bottomhalf.grid(column=0, row=1)
+		self._tophalf.columnconfigure(0, minsize=70, weight=2)
+		self._tophalf.rowconfigure(0, minsize=25, weight=2)
+		self._bottomhalf.columnconfigure(0, minsize=70, weight=2)
+		self._bottomhalf.rowconfigure(0, minsize=25, weight=2)
+
 
 		#Have to bind the appropiate functions to the top and bottom half of the frame now
 		for i in (self._tophalf, self._bottomhalf):
-			i.bind('<Enter>', frame.hover)
-			i.bind('<Leave>', frame.leave)
-			i.bind('<Double-Button-1>', frame.appointmentEditor)
+			i.bind('<Enter>', self.hover)
+			i.bind('<Leave>', self.leave)
+			i.bind('<Double-Button-1>', self.appointmentEditor)
 
 	def destroySplit(self):
 		"""
@@ -239,7 +250,7 @@ for i in range(hours_in_day):
 This is the test code section because scrolling through all of cody's doctests is probably the most painfull experience of my life
 """
 
-markBusy('get it', 9, 15, 'Wednesday', 'black')
+markBusy('get it', 9.5, 11.5, 'Wednesday', 'yellow')
 
 #-----------------------------------------re-size settings-----------------------------------------------
 

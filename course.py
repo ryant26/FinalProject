@@ -29,6 +29,8 @@ class Course:
         self.start = times[0]
         self.end = times[1]
         self.days = info[2]
+        print(self.start)
+        print(self.end)
 
         # insert into collection of instances
         
