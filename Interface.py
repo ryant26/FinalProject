@@ -42,8 +42,6 @@ class ScheduleFrame():
 		#initialize the TK frame with the values we want
 		self._frame = Frame(parent, borderwidth=Borderwidth, relief=Relief, bg = 'white')
 		self._borderwidth = Borderwidth
-		self._course = None
-		self._color = None
 		self._start_time = start_time
 		self._end_time = end_time
 		self._day = day
@@ -51,6 +49,8 @@ class ScheduleFrame():
 		self._bottomhalf = None
 		self._tophalf_busy = False
 		self._bottomhalf_busy = False
+		self._name = None
+		self._name_appt = None
 
 	def grid(self, Stickey, Row, Column):
 		"""
@@ -84,7 +84,7 @@ class ScheduleFrame():
 		#find a better solution than putting it twice? 
 		global appointment_editor
 		if appointment_editor == None:
-			menu.MenuWin("Enter Class Name", (str(self._start_time)+':00', str(self._end_time)+':00'), [self._day])
+			menu.MenuWin(self._name_appt, (str(self._start_time)+':00', str(self._end_time)+':00'), [self._day])
 		else:
 			appointment_editor.destroy()
 			appointment_editor = Toplevel(root)
@@ -97,23 +97,30 @@ class ScheduleFrame():
 		#appointment ends on the hour, fill the whole frame
 		if top == False and bottom == False:	
 			self._frame.configure(background=color)
-			self._name = ttk.Label(self._frame, text = class_name).grid(row=0, column=0)
+			self._name = ttk.Label(self._frame, text = class_name, background=color)
+			#Bind all the functions we want to each frame
+			self._name.bind('<Double-Button-1>', self.appointmentEditor)
 
 		#appointment ends or begins on half hour
 		elif top == True:
 
 			#appointments ends in this frame
 			self._tophalf.configure(background=color)
-			self._name = ttk.Label(self._tophalf, text = class_name).grid(row=0, column=0)
+			self._name = ttk.Label(self._tophalf, text = class_name, background=color)
 			self._tophalf_busy = True
+			#Bind all the functions we want to each frame
+			self._name.bind('<Double-Button-1>', self.appointmentEditor)
 
 		#appointment begins in this frame	
 		else:
 			self._bottomhalf.configure(background=color)
-			self._name = ttk.Label(self._bottomhalf, text = class_name).grid(row=0, column=0)
+			self._name = ttk.Label(self._bottomhalf, text = class_name, background=color)
 			self._bottomhalf_busy = True
+			#Bind all the functions we want to each frame
+			self._name.bind('<Double-Button-1>', self.appointmentEditor)
 
-		
+		self._name.grid(row=0, column=0)
+		self._name_appt = class_name
 
 	def markAvailable(self):
 		 """
@@ -138,23 +145,25 @@ class ScheduleFrame():
 			self._frame.rowconfigure(i, weight=1, minsize=25)
 
 		#Put two smaller frames in the schedule frame and set options
-		self._tophalf = Frame(self._frame, relief='solid', borderwidth = 1, background='yellow')
-		self._bottomhalf = Frame(self._frame, relief='solid', borderwidth = 1, background='yellow')
+		self._tophalf = Frame(self._frame, relief='solid', borderwidth = 1, background='white')
+		self._bottomhalf = Frame(self._frame, relief='solid', borderwidth = 1, background='white')
 
 		#Set up the two split frames to take up half the area of the main frame
-		self._tophalf.grid(column=0, row=0)
-		self._bottomhalf.grid(column=0, row=1)
-		self._tophalf.columnconfigure(0, minsize=70, weight=2)
-		self._tophalf.rowconfigure(0, minsize=25, weight=2)
-		self._bottomhalf.columnconfigure(0, minsize=70, weight=2)
-		self._bottomhalf.rowconfigure(0, minsize=25, weight=2)
+		self._tophalf.grid(column=0, row=0, sticky='nsew')
+		self._bottomhalf.grid(column=0, row=1, sticky='nsew')
+		self._tophalf.columnconfigure(0, minsize=70, weight=1)
+		self._tophalf.rowconfigure(0, minsize=25, weight=1)
+		self._bottomhalf.columnconfigure(0, minsize=70, weight=1)
+		self._bottomhalf.rowconfigure(0, minsize=25, weight=1)
 
 
 		#Have to bind the appropiate functions to the top and bottom half of the frame now
+		"""
 		for i in (self._tophalf, self._bottomhalf):
 			i.bind('<Enter>', self.hover)
 			i.bind('<Leave>', self.leave)
 			i.bind('<Double-Button-1>', self.appointmentEditor)
+		"""
 
 	def destroySplit(self):
 		"""
@@ -245,7 +254,6 @@ for i in range(hours_in_day):
 """
 This is the test code section because scrolling through all of cody's doctests is probably the most painfull experience of my life
 """
-
 #-----------------------------------------re-size settings-----------------------------------------------
 
 #Loop through all rows and columns and allow them to be resized
