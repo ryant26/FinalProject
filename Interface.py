@@ -97,20 +97,20 @@ class ScheduleFrame():
 
 		#appointment ends on the hour, fill the whole frame
 		if top == False and bottom == False:	
-			self._frame.configure(background=color)
+			self._frame['background'] = color
 			self._frame.Label(text = class_name).grid(sticky = 'news')
 
 		#appointment ends or begins on half hour
 		elif top == True:
 
 			#appointments ends in this frame
-			self._tophalf.configure(background=color)
+			self._tophalf['background'] = color
 			self._tophalf.Label(text = class_name).grid(sticky = 'news')
 			self._tophalf_busy = True
 
 		#appointment begins in this frame	
 		else:
-			self._bottomhalf.configure(background=color)
+			self._bottomhalf['background'] = color
 			self._bottomhalf.Label(text = class_name).grid(sticky = 'news')
 			self._bottomhalf_busy = True
 
@@ -124,7 +124,7 @@ class ScheduleFrame():
 
 		 color = 'grey'
 		 if self._tophalf_busy == False and self._bottomhalf_busy == False:
-		 	self._frame.configure(background=color)
+			 self._frame['background'] = 'grey'
 			
 
 	def split(self):
@@ -163,8 +163,8 @@ def markBusy(class_name, start, end, day, color):
 
 	for i in schedule[day]:
 		#recursive call to the funciton if the appointment spans multiple frames
-		if start >= i._start_time and start <= i._endtime:
-			if duraion > 0.5:
+		if start >= i._start_time and start <= i._end_time:
+			if duration > 0.5:
 				if start == i._start_time:
 					i.markBusy(class_name, color, False, False)
 					markBusy(class_name,start-1, end, day, color)

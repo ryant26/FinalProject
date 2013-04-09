@@ -1,23 +1,23 @@
-import numpy
-
+import random
+import Interface
 
 class Course:
     """
     Will initialize a class using the following format for info:
     info = ( "course name", ["start time", "end time"], [days])
 
-    >>> course = Course(("ECE 212", ['8:00', '9:00'], ["Monday", "Wednesday", "Friday"]))
+    >>> course = Course(("ECE 212", [8, 9], ["Monday", "Wednesday", "Friday"]))
     >>> course.name == "ECE 212"
     True
     >>> print(Course._instances)
     >>> course.start
-    '8:00'
+    8
     >>> course.end
-    '9:00'
+    9
     >>> course.days
     ['Monday', 'Wednesday', 'Friday']
     >>> course.each_day()
-    [('Monday', '8:00', '9:00'), ('Wednesday', '8:00', '9:00'), ('Friday', '8:00', '9:00')]
+    [('Monday', 8, 9), ('Wednesday', 8, 9), ('Friday', 8, 9)]
     """
 
 
@@ -29,15 +29,22 @@ class Course:
         self.start = times[0]
         self.end = times[1]
         self.days = info[2]
-        
 
         # insert into collection of instances
         
-	for i in self.days:
-		if i in Course._instances:
-			Course._instances[i].append(self)
-		else:
-			Course._instances[i] = [self]
+        for i in self.days:
+            if i in Course._instances:
+                Course._instances[i].append(self)
+            else:
+                Course._instances[i] = [self]
+
+        r = str(hex(random.randint(0,16)))
+        g = str(hex(random.randint(0,16)))
+        b = str(hex(random.randint(0,16)))
+        self._color = '#'+r+g+b
+        for i in self.days:
+            Interface.markBusy(self.name, self.start, self.end, i, 'blue')
+
     def get_start_time(self):
         return self.start
     
@@ -65,7 +72,7 @@ class Course:
     def change_time(self, start, end):
         """
         Change the time to a new (start,end) pair
-        >>> course = Course(("ECE 212", ["8:00", "9:00"], ["Monday", "Wednesday", "Friday"]))
+        >>> course = Course(("ECE 212", [8, 9], ["Monday", "Wednesday", "Friday"]))
         >>> course.change_time("9:00","10:00")
         >>> course.start
         '9:00'
@@ -116,16 +123,23 @@ class Course:
         """
         Saves a course object by it's data into a text file.
         Used to restore data from previous session on startup
-        NOTE
-        Must have numpy module installed
-	>>> course = Course(("ECE 212", ["8:00", "9:00"], ["Monday", "Wednesday", "Friday"]))
+
+ 	>>> course = Course(("ECE 212", ["8:00", "9:00"], ["Monday", "Wednesday", "Friday"]))
     	>>> course.save()
         """
-        name = str(self.name)
-        name = numpy.fromstring(name)
-        numpy.savetxt('save2.txt', name)
-        np.savetxt(save2.txt, [self.start, self.end])
-        np.savetxt(save2.txt, self.days, newline = '\n')
+        opened = open("save.txt", 'w')
+        st_start = str(self.start)
+        st_end = str(self.end)
+
+        opened.write(self.name)
+        opened.write(st_start)
+        opened.write(st_end)
+        for i in self.days:
+            opened.write(i)
+        opened.write('/n')
+        opened.close()
+            
+
 
 #def load():
     """
@@ -134,8 +148,6 @@ class Course:
     This is done on startup to recreate the environment
     from previous shutdown. Will need to be iterated over
     in order to recreate all courses
-    NOTE
-    Must have numpy module installed
     
     >>> course = Course(("ECE 212", ["8:00", "9:00"], ["Monday", "Wednesday", "Friday"]))
     >>> course.save
@@ -143,8 +155,11 @@ class Course:
     ("ECE 212", ["8:00", "9:00"], ["Monday", "Wednesday", "Friday"])
     
     """
-   # info = numpy.loadtxt(save.txt)
-   # yield Course(info) 
+    opened = open("save.txt", 'r')
+    all_courses = opened.readlines()
+    for i in all_courses:
+        pass
+        
     
 if __name__ == "__main__":
     import doctest
