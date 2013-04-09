@@ -166,9 +166,9 @@ def load():
         days = days.split()
         course = Course((i[0], times, days))
         
-course = Course(("ECE 212", [12,13], ["Monday", "Wednesday", "Friday"]))
-course2 = Course(("CMPUT 272", [12.5,14], ["Tuesday", "Thursday"]))
-Course.save()
+#course = Course(("ECE 212", [12,13], ["Monday", "Wednesday", "Friday"]))
+#course2 = Course(("CMPUT 272", [12.5,14], ["Tuesday", "Thursday"]))
+#Course.save()
 
 
 """
