@@ -121,17 +121,22 @@ class Course:
         courses = [course objects]
         """
         courses = Course.get_all_instances()
+        saved = []
         opened = open("save.txt", 'w')
-        for i in courses:
-            st_start = str(i.start)
-            st_end = str(i.end)
-            opened.write(i.name)
+        for j in courses:
+            if j not in saved:
+                saved.append(j)
+        for j in saved:
+            obj = j[0]
+            st_start = str(obj.start)
+            st_end = str(obj.end)
+            opened.write(obj.name)
             opened.write(': ')
             opened.write(st_start)
             opened.write(' ')
             opened.write(st_end)
             opened.write(': ')
-            for x in i.days:
+            for x in obj.days:
                 opened.write(x)
                 opened.write(' ')
             opened.write(':')
@@ -161,9 +166,9 @@ def load():
         days = days.split()
         course = Course((i[0], times, days))
         
-#course = Course(("ECE 212", [12,13], ["Monday", "Wednesday", "Friday"]))
-#course2 = Course(("CMPUT 272", [12.5,14], ["Tuesday", "Thursday"]))
-#Course.save([course, course2])
+course = Course(("ECE 212", [12,13], ["Monday", "Wednesday", "Friday"]))
+course2 = Course(("CMPUT 272", [12.5,14], ["Tuesday", "Thursday"]))
+Course.save()
 
 
 """
