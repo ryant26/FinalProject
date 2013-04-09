@@ -246,8 +246,6 @@ for i in range(hours_in_day):
 This is the test code section because scrolling through all of cody's doctests is probably the most painfull experience of my life
 """
 
-markBusy('get it', 9.5, 11.5, 'Wednesday', 'yellow')
-
 #-----------------------------------------re-size settings-----------------------------------------------
 
 #Loop through all rows and columns and allow them to be resized
@@ -261,4 +259,4 @@ for i in range(grid_row_max+1):
 #button
 create_new.grid(column= 0, row=0)
 
-root.mainloop()	
+#root.mainloop()	
