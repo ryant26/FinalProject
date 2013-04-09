@@ -40,12 +40,13 @@ class Course:
             else:
                 Course._instances[i] = [self]
 
-        r = str(hex(random.randint(0,16)))
-        g = str(hex(random.randint(0,16)))
-        b = str(hex(random.randint(0,16)))
+        r = str(hex(random.randint(0,16))[2])
+        g = str(hex(random.randint(0,16))[2])
+        b = str(hex(random.randint(0,16))[2])
         self._color = '#'+r+g+b
+        
         for i in self.days:
-            Interface.markBusy(self.name, self.start, self.end, i, 'blue')
+            Interface.markBusy(self.name, self.start, self.end, i, self._color)
 
     def get_start_time(self):
         return self.start
@@ -132,17 +133,16 @@ class Course:
         for i in courses:
             st_start = str(i.start)
             st_end = str(i.end)
-            #opened.write('[')
             opened.write(i.name)
-            opened.write('] ')
+            opened.write(': ')
             opened.write(st_start)
             opened.write(' ')
             opened.write(st_end)
-            opened.write('] ')
+            opened.write(': ')
             for x in i.days:
                 opened.write(x)
                 opened.write(' ')
-            opened.write(']')
+            opened.write(':')
             opened.write('\n')
         opened.close()
             
@@ -159,7 +159,7 @@ def load():
     opened = open("save.txt", 'r')
     all_courses = opened.readlines()
     for i in all_courses:
-        i = i.split(']')
+        i = i.split(':')
         name = i[0]
         times = i[1]
         times = times.split()
