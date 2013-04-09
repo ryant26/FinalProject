@@ -138,7 +138,7 @@ class ScheduleFrame():
 			self._frame.rowconfigure(i, weight=1, minsize=25)
 
 		#Put two smaller frames in the schedule frame and set options
-		self._tophalf = Frame(self._frame, relief='solid', borderwidth = 1, background='yellow', weight=1)
+		self._tophalf = Frame(self._frame, relief='solid', borderwidth = 1, background='yellow')
 		self._bottomhalf = Frame(self._frame, relief='solid', borderwidth = 1, background='yellow')
 
 		#Set up the two split frames to take up half the area of the main frame
@@ -265,4 +265,4 @@ for i in range(grid_row_max+1):
 #button
 create_new.grid(column= 0, row=0)
 
-root.mainloop()	
+#root.mainloop()	
