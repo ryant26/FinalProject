@@ -32,13 +32,18 @@ class Course:
         
 
         # insert into collection of instances
-        """
+        
 	for i in self.days:
 		if i in Course._instances:
 			Course._instances[i].append(self)
 		else:
 			Course._instances[i] = [self]
-        """
+    def get_start_time(self):
+        return self.start
+    
+    def get_end_time(self):
+        return self.end
+
     def get_all_instances(self):
         """
         Gets all instances of Course class, allows
@@ -116,7 +121,9 @@ class Course:
 	>>> course = Course(("ECE 212", ["8:00", "9:00"], ["Monday", "Wednesday", "Friday"]))
     	>>> course.save()
         """
-        numpy.savetxt('save2.txt', self.name)
+        name = str(self.name)
+        name = numpy.fromstring(name)
+        numpy.savetxt('save2.txt', name)
         np.savetxt(save2.txt, [self.start, self.end])
         np.savetxt(save2.txt, self.days, newline = '\n')
 
