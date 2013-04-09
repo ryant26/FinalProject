@@ -114,13 +114,13 @@ class Course:
             per_day.append((i, self.start, self.end))
         return per_day
     
-    def save(courses):
+    def save():
         """
         Saves a list of course objects by their data into a text file.
         Used to restore data from previous session on startup
         courses = [course objects]
         """
-        
+        courses = Course.get_all_instances()
         opened = open("save.txt", 'w')
         for i in courses:
             st_start = str(i.start)
