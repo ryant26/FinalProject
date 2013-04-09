@@ -3,23 +3,20 @@ This is the file that containes all of the code for the main interface
 """
 from tkinter import *
 from tkinter import ttk
-#import class
 import random
-
 
 #Global Variables
 global grid_col_max
 global grid_row_max
-
+global appointment_editor
 global number_of_days
 global hours_in_day
 global schedule
 global days_of_week
 global root
-global appointment_editor
+
 
 root = Tk()
-appointment_editor = None
 grid_col_max=8
 grid_row_max=10
 schedule = {}
@@ -28,6 +25,7 @@ frame_row = 1
 number_of_days = 7
 hours_in_day = 10
 days_of_week = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+appointment_editor = None
 
 class ScheduleFrame():
 
@@ -48,6 +46,8 @@ class ScheduleFrame():
 		self._start_time = start_time
 		self._end_time = end_time
 		self._day = day
+		self._tophalf = None
+		self._bottomhalf = None
 
 	def grid(self, Stickey, Row, Column):
 		"""
@@ -87,7 +87,8 @@ class ScheduleFrame():
 			appointment_editor = Toplevel(root)
 	def markBusy(self, class_name, color):
 		"""
-		This functions fills in the frame if an appointment is added 
+		This functions fills in the frame if an appointment is added. If the appointment ends on the half hour in this frame
+		it will fill the top half. If an appointment starts in this frame it will fill the bottom half.  
 		"""
 		global schedule
 
@@ -99,14 +100,71 @@ class ScheduleFrame():
 			self._color = '#'+r+g+b
 		else:									#otherwise we use the color provided
 			self._color = color
-		self._frame.configure(background=color)
-		self._frame.Label(text = class_name).grid(sticky = 'news')
 
+		#appointment ends on the hour, fill the whole frame
+		if self._tophalf == None and self._bottomhalf == None:	
+			self._frame.configure(background=color)
+			self._frame.Label(text = class_name).grid(sticky = 'news')
+
+		#appointment ends or begins on half hour
+		else:
+
+			#appointments ends in this frame
+			if self._course._endtime <= self._endtime:
+				self._tophalf.configure(background=color)
+				self._tophalf.Label(text = class_name).grid(sticky = 'news')
+
+			#appointment begins in this frame	
+			else:
+				self._bottomhalf.configure(background=color)
+				self._bottomhalf.Label(text = class_name).grid(sticky = 'news')
+
+		#recursive call to the funciton if the appointment spans multiple frames
 		if self._course._endtime > self._endtime:
-			for i in schedule[self._day]:
-				if i._start_time == self._endtime:
-					i.markBusy(class_name, self._color)
-			
+				for i in schedule[self._day]:
+					if i._start_time == self._endtime:
+						i.markBusy(class_name, self._color)
+	def markAvailable(self):
+		 """
+		 This function resets the color in the frame when an appointment is removed
+		 """
+		 global schedule
+
+		 color = 'grey'
+		 if self._tophalf == None and self._bottomhalf == None:	
+			self._frame.configure(background=color)
+			self._frame.
+
+	def split(self):
+		"""
+		If an appointment is added that goes on the half hour we have to split the frame
+		"""
+		#set up the frame to be resizeable
+		self._frame.columnconfigure(0, weight = 1, minsize = 70)
+		for i in (0,1):
+			self._frame.rowconfigure(i, weight=1, minsize=25)
+
+		#Put two smaller frames in the schedule frame and set options
+		self._tophalf = ttk.Frame(self._frame, relief='solid', borderwidth = 1).grid(row = 0, column = 0)
+		self._bottomhalf = ttk.Frame(self._frame, relief='solid', borderwidth = 1).gird(row = 1, column=0)
+
+		#Have to bind the appropiate functions to the top and bottom half of the frame now
+		for i in (self._tophalf, self._bottomhalf):
+			i.bind('<Enter>', frame.hover)
+			i.bind('<Leave>', frame.leave)
+			i.bind('<Double-Button-1>', frame.appointmentEditor)
+
+	def destroySplit(self):
+		"""
+		If we no longer need the frame to be split, this can be called to destroy the split
+		"""
+		self._tophalf.forget()
+		self._bottomhalf.forget()
+
+		self._tophalf = None
+		self._bottomhalf = None
+
+
 
 # ***THIS IS A DUMBY FUNCTION TO OPEN ANOTHER WINDOW***
 #this will be replaced by the caller to Brittany's code	
