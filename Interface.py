@@ -197,8 +197,9 @@ Initializes the toplevel menu window, calling each seperate function that
     save = Button(win, text = "SAVE", command = lambda: save_contents(course_name, Times, Days))
     save.grid(column=5, row=6)
     clear = Button(win, text = "CLEAR", command = lambda: clear_contents(Days, course_name, Times))
-
     clear.grid(column=3, row=6)
+    delete =  Button(win, text = "DELETE")
+    delete.grid(column=2, row=6)
 
 def Course_Input(win, title):
     name = Label(win, text = "Course Name:")
@@ -306,31 +307,50 @@ def clear_contents(Days, course_name, Times):
 #------------------------------------------------Logic Functions-----------------------------------------------------
 
 def markBusy(class_name, start, end, day, color):
+	"""
+	This is the function that fills in the frames in the schedule when an appointment
+	is created. 
+
+	It is recursively defined function so that it can properl handle half hour increments
+	"""
 	global schedule
 
+	#initialize variables we use
 	duration = end - start
 	already_split = True
 
 	if duration > 0:
 		for i in schedule[day]:
-			#recursive call to the funciton if the appointment spans multiple frames
+			# Find the frame that the start time is contained in 
 			if start >= i._start_time and start < i._end_time:
+
+				#In order to avoid overwriting half hour frames, we assume every frame is already split into half hours
+				#If it's not we change the variable
 				if i._tophalf_busy == False and i._bottomhalf_busy == False:
 					already_split = False
+
+				#Recursion part
 				if duration > 0.5:
+
+					#Case where the whole frame is filled
 					if start == i._start_time:
 						i.markBusy(class_name, color, False, False)
 						markBusy(class_name,start+1, end, day, color)
+					#Case where half the frame is filled 
 					else:
 						if already_split == False:
 							i.split()
 						i.markBusy(class_name, color, False, True)
 						markBusy(class_name, start+0.5, end, day, color)
+				#Where the functions breaks recursion
 				else:
+						#ends on a half hour
 						if start == i._start_time:
 							if already_split == False: 
 								i.split()
 							i.markBusy(class_name, color, True, False)
+
+						#begins on a half hour
 						else:
 							if already_split == False:
 								i.split()
@@ -381,7 +401,7 @@ def loadText():
 			for x in j.get_days():
 				markBusy(j.get_name(), j.get_start_time(), j.get_end_time(), x, color)
 
-# Buttons we will need
+#-----------------------------------------------------Body of Code -------------------------------------------------------------------------
 
 #This is to create a new appointment
 create_new = ttk.Button(root, text='New Appointment', padding=(5,5,5,5), command=appointmentEditor)
