@@ -9,7 +9,6 @@ class Course:
     >>> course = Course(("ECE 212", [8, 9], ["Monday", "Wednesday", "Friday"]))
     >>> course.name == "ECE 212"
     True
-    >>> print(Course._instances)
     >>> course.start
     8
     >>> course.end
@@ -23,12 +22,16 @@ class Course:
 
     _instances = {}
 
-    def __init__(self, info):
+    def __init__(self, info, free = False):
         self.name = info[0]
         times = info[1]
         self.start = times[0]
         self.end = times[1]
         self.days = info[2]
+        # assigns True or False for use with
+        # homework algorithm, won't factor in
+        # free time
+        self.free = free
 
         # insert into collection of instances
         for i in self.days:
@@ -38,15 +41,27 @@ class Course:
                 Course._instances[i]=[self]
 
     def get_name(self):
+        """
+        Returns the name of the course
+        """
         return self.name
 
     def get_days(self):
+        """
+        Returns a list of all days of the course
+        """
         return self.days
 
     def get_start_time(self):
+        """
+        Returns start time of course
+        """
         return self.start
     
     def get_end_time(self):
+        """
+        Returns end time of course
+        """
         return self.end
 
     def get_all_instances():
@@ -115,33 +130,39 @@ class Course:
             per_day.append((i, self.start, self.end))
         return per_day
     
-    def save():
-        """
-        Saves all objects that exist as instances of a Course
-        object. Called whenever you wish to save.
-        """
-        courses = Course.get_all_instances()
-        saved = []
-        opened = open("save.txt", 'w')
-        for j in courses:
-            if j not in saved:
-                saved.append(j)
-        for j in saved:
-            for i in j:
-                st_start = str(i.start)
-                st_end = str(i.end)
-                opened.write(i.name)
-                opened.write(': ')
-                opened.write(st_start)
+def save():
+    """
+    Saves all objects that exist as instances of a Course
+    object. Called whenever you wish to save.
+    """
+
+    #retrieve all instances of courses to save
+    courses = Course.get_all_instances()
+    saved = []
+    opened = open("save.txt", 'w')
+    #remove duplicates (because an instance saves per day of course)
+    for j in courses:
+        if j not in saved:
+            saved.append(j)
+    for j in saved:
+        #remove nested list to get to the object
+        for i in j:
+            #formatting, saves it very specifically
+            st_start = str(i.start)
+            st_end = str(i.end)
+            opened.write(i.name)
+            opened.write(': ')
+            opened.write(st_start)
+            opened.write(' ')
+            opened.write(st_end)
+            opened.write(': ')
+            for x in i.days:
+                opened.write(x)
                 opened.write(' ')
-                opened.write(st_end)
-                opened.write(': ')
-                for x in i.days:
-                    opened.write(x)
-                    opened.write(' ')
-                opened.write(':')
-                opened.write('\n')
-        opened.close()
+            opened.write(':')
+            opened.write('\n')
+    #close file, saves memory
+    opened.close()
             
 
 
@@ -154,7 +175,10 @@ def load():
     
     """
     opened = open("save.txt", 'r')
+    # read through all lines of the file (one course per
+    # line)
     all_courses = opened.readlines()
+    # due to specific format of saving, load back in
     for i in all_courses:
         i = i.split(':')
         name = i[0]
@@ -164,15 +188,11 @@ def load():
         times[1] = float(times[1])
         days = i[2]
         days = days.split()
+        # create course objects based on data read in
         course = Course((i[0], times, days))
         
-#course = Course(("ECE 212", [12,13], ["Monday", "Wednesday", "Friday"]))
-#course2 = Course(("CMPUT 272", [12.5,14], ["Tuesday", "Thursday"]))
-#Course.save()
 
-
-"""
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-"""
+
