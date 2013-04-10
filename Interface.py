@@ -420,13 +420,12 @@ def color_rand():
 	This function creates a random color and returns it in the form
 	#rgb wher r,g and b are a hexidecimal value from 0 to f
 	"""
-    r = str(hex(random.randint(0,16))[2])
-    g = str(hex(random.randint(0,16))[2])
-    b = str(hex(random.randint(0,16))[2])
+	r = str(hex(random.randint(0,16))[2])
+	g = str(hex(random.randint(0,16))[2])
+	b = str(hex(random.randint(0,16))[2])
 
-    return '#'+r+g+b
+	return '#'+r+g+b
      
-
 def loadText():
 	"""
 	This function loads in the text file, supposed to be called at the beggining of the program
@@ -491,5 +490,5 @@ for i in range(grid_row_max+1):
 
 #button
 create_new.grid(column= 0, row=0)
-
+root.title(string='Scheduler')
 root.mainloop()	
