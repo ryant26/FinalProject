@@ -36,6 +36,7 @@ class Course:
                 Course._instances[i].append(self)
             else:
                 Course._instances[i]=[self]
+
     def get_name(self):
         return self.name
 
@@ -116,9 +117,8 @@ class Course:
     
     def save():
         """
-        Saves a list of course objects by their data into a text file.
-        Used to restore data from previous session on startup
-        courses = [course objects]
+        Saves all objects that exist as instances of a Course
+        object. Called whenever you wish to save.
         """
         courses = Course.get_all_instances()
         saved = []
@@ -127,20 +127,20 @@ class Course:
             if j not in saved:
                 saved.append(j)
         for j in saved:
-            obj = j[0]
-            st_start = str(obj.start)
-            st_end = str(obj.end)
-            opened.write(obj.name)
-            opened.write(': ')
-            opened.write(st_start)
-            opened.write(' ')
-            opened.write(st_end)
-            opened.write(': ')
-            for x in obj.days:
-                opened.write(x)
+            for i in j:
+                st_start = str(i.start)
+                st_end = str(i.end)
+                opened.write(i.name)
+                opened.write(': ')
+                opened.write(st_start)
                 opened.write(' ')
-            opened.write(':')
-            opened.write('\n')
+                opened.write(st_end)
+                opened.write(': ')
+                for x in i.days:
+                    opened.write(x)
+                    opened.write(' ')
+                opened.write(':')
+                opened.write('\n')
         opened.close()
             
 
