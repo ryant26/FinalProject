@@ -53,6 +53,8 @@ class ScheduleFrame():
 		self._bottomhalf_busy = False
 		self._name = None
 		self._name_appt = None
+		parent.title(string= "Schedule Builder")
+
 
 	def grid(self, Stickey, Row, Column):
 		"""
@@ -258,9 +260,12 @@ def save_contents(course_name, Times, Days):
     print("SAVING!!!")
     info = get_contents(course_name, Times, Days)
     clear_contents(Days, course_name, Times)
+    app = course.Course((info))
+    color = color_rand()
+    for i in app.get_days():
+        markBusy(app.get_name(), app.get_start_time(), app.get_end_time(), i, color)
 
-
-    return info
+    course.Course.save()
     
 def get_contents(course_name, Times, Days):
     name_c = course_name.get()
@@ -349,6 +354,15 @@ def appointmentEditor():
 	else:
 		appointment_editor.destroy()
 		appointment_editor = Toplevel(root)
+
+def color_rand():
+    r = str(hex(random.randint(0,16))[2])
+    g = str(hex(random.randint(0,16))[2])
+    b = str(hex(random.randint(0,16))[2])
+
+    return '#'+r+g+b
+     
+
 def loadText():
 	"""
 	This function loads in the text file, supposed to be called at the beggining of the program
@@ -356,10 +370,7 @@ def loadText():
 	course.load()
 	for i in course.Course.get_all_instances():
 		for j in i:
-			r = str(hex(random.randint(0,16))[2])
-			g = str(hex(random.randint(0,16))[2])
-			b = str(hex(random.randint(0,16))[2])
-			color = '#'+r+g+b
+			color = color_rand()
 			for x in j.get_days():
 				markBusy(j.get_name(), j.get_start_time(), j.get_end_time(), x, color)
 
