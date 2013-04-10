@@ -28,7 +28,7 @@ hours_in_day = 10
 days_of_week = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 appointment_editor = None
 
-#-----------------------------------------------------------Schedule Frame Class---------------------------------------------------------
+#------------------------------------------------Schedule Frame Class-------------------------------------------------
 
 class ScheduleFrame():
 
@@ -181,7 +181,7 @@ class ScheduleFrame():
 		self._tophalf = None
 		self._bottomhalf = None
 
-#-----------------------------------Appointment Editor---------------------------------------------------
+#------------------------------------------------Appointment Editor---------------------------------------------------
 
 def MenuWin(name_c, time_list, day_list):
     """
@@ -299,6 +299,8 @@ def get_contents(course_name, Times, Days):
 def clear_contents(Days, course_name, Times):
     course_name.set('Enter Class Name')
     (time_1, time_2) = Times
+    for key, value in Days.items():
+        Days[key].set(0)
     time_1.set('8:00')
     time_2.set('12:00')
     for key, value in Days.items():
@@ -365,7 +367,29 @@ def markAvailable(start, end, day):
 			#recursive call to the function to delete the appointment
 			if duration > 0.5:
 				if start ==i._start_time:
-					pass
+					i.markAvailable(False, False)
+					markAvailable(start+1, end, day)
+				else:
+					if i._tophalf_busy == True:
+						i.markAvailable(False, True)
+						markAvailable(start + 0.5, end, day)
+					else:
+						i.destroySplit()
+						i.markAvailable(False, False)
+						markAvailable(start + 0.5, end, day)
+			else:
+				if start == i._start_time:
+					if i._bottomhalf_busy == True:
+						i.markAvailable(True, False)
+					else:
+						i.destroySplit()
+						i.markAvailable(False, False)
+				else:
+					if i._tophalf_busy == True:
+						i.markAvailable(False, True)
+					else:
+						i.destroySplit()
+						i.markAvailable(False, False)
 
 
 # ***THIS IS A DUMBY FUNCTION TO OPEN ANOTHER WINDOW***
