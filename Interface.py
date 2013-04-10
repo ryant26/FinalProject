@@ -276,7 +276,7 @@ def save_contents(course_name, Times, Days):
     for i in app.get_days():
         markBusy(app.get_name(), app.get_start_time(), app.get_end_time(), i, color)
 
-    course.Course.save()
+    course.save()
     
 def get_contents(course_name, Times, Days):
     name_c = course_name.get()
