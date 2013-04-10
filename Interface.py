@@ -28,7 +28,7 @@ hours_in_day = 10
 days_of_week = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 appointment_editor = None
 
-#-----------------------------------------------------------Schedule Frame Class---------------------------------------------------------
+#------------------------------------------------Schedule Frame Class-------------------------------------------------
 
 class ScheduleFrame():
 
@@ -97,7 +97,6 @@ class ScheduleFrame():
 		This functions fills in the frame if an appointment is added. If the appointment ends on the half hour in this frame
 		it will fill the top half. If an appointment starts in this frame it will fill the bottom half.  
 		"""
-
 		#appointment ends on the hour, fill the whole frame
 		if top == False and bottom == False:	
 			self._frame.configure(background=color)
@@ -135,12 +134,17 @@ class ScheduleFrame():
 		global schedule
 
 		color = 'white'
-		if top == False and self._bottom == False:
-		 self._frame.configure(background=color)
+		if top == False and bottom == False:
+			self._name.grid_forget()		
+			self._name.configure(background='black')
+			self._frame.configure(background=color)
 
 		if top == True:
+			self._topname.forget()
 			self._tophalf.configure(background=color)
+
 		if bottom == True:
+			self._bottomname.forget()
 			self._bottomhalf.configure(background=color)
 
 
@@ -175,17 +179,23 @@ class ScheduleFrame():
 		"""
 		If we no longer need the frame to be split, this can be called to destroy the split
 		"""
+		#Delete the Class Label Names
+		if self._topname:
+				self._topname.forget()
+		if self._bottomname:
+			self._bottomname.forget()
+
 		self._tophalf.forget()
 		self._bottomhalf.forget()
 
 		self._tophalf = None
 		self._bottomhalf = None
 
-#-----------------------------------Appointment Editor---------------------------------------------------
+#------------------------------------------------Appointment Editor---------------------------------------------------
 
 def MenuWin(name_c, time_list, day_list):
     """
-Initializes the toplevel menu window, calling each seperate function that
+	Initializes the toplevel menu window, calling each seperate function that
     """
     win = Toplevel()
     win.title(string= "Class Editor")
@@ -198,7 +208,7 @@ Initializes the toplevel menu window, calling each seperate function that
     save.grid(column=5, row=6)
     clear = Button(win, text = "CLEAR", command = lambda: clear_contents(Days, course_name, Times))
     clear.grid(column=3, row=6)
-    delete =  Button(win, text = "DELETE")
+    delete =  Button(win, text = "DELETE", command = lambda: delete_contents(Days, course_name, Times) )
     delete.grid(column=2, row=6)
 
 def Course_Input(win, title):
@@ -299,11 +309,17 @@ def get_contents(course_name, Times, Days):
 def clear_contents(Days, course_name, Times):
     course_name.set('Enter Class Name')
     (time_1, time_2) = Times
+    for key, value in Days.items():
+        Days[key].set(0)
     time_1.set('8:00')
     time_2.set('12:00')
     for key, value in Days.items():
         Days[key].set(0)
 
+def delete_contents(Days, course_name, Times):
+	info = get_contents(course_name, Times, Days)
+	for i in info[2]:
+		markAvailable(info[1][0], info[1][1], i)
 #------------------------------------------------Logic Functions-----------------------------------------------------
 
 def markBusy(class_name, start, end, day, color):
@@ -357,19 +373,50 @@ def markBusy(class_name, start, end, day, color):
 							i.markBusy(class_name, color, False, True)
 
 def markAvailable(start, end, day):
+	"""
+	This is a recursively defined function that takes an appointment start and end time as well as a day
+	and clears those sections on the schedule interface.
+
+	When it comes across a block with 2 half hour oppointments it will clear only one. If only one half hour appointment occurs
+	in a block then we destory the split and turn the block into a full hour block again.
+	"""
+	#Variables we need
 	global schedule
-
 	duration = end - start
-	if duration >0:
+
+	#We run while the duration is greater than 0
+	if duration > 0:
+		#Cycle through all of the frames and find the one where the start time occurs 
 		for i in schedule[day]:
-			#recursive call to the function to delete the appointment
-			if duration > 0.5:
-				if start ==i._start_time:
-					pass
+			if start >= i._start_time and start < i._end_time:
+				#Recursive part
+				if duration > 0.5:
+					if start ==i._start_time:					#Hour long block to clear
+						i.markAvailable(False, False)
+						markAvailable(start+1, end, day)
+					else:
+						if i._tophalf_busy == True:				#Clear bottom block 
+							i.markAvailable(False, True)
+							markAvailable(start + 0.5, end, day)
+						else:
+							i.destroySplit()					#Restore block and fill entire area
+							i.markAvailable(False, False)
+							markAvailable(start + 0.5, end, day)
+				#Recursion Ends here 
+				else:
+					if start == i._start_time:					#Cear top blcok
+						if i._bottomhalf_busy == True:
+							i.markAvailable(True, False)
+						else:
+							i.destroySplit()					#Restore block and fill entire area
+							i.markAvailable(False, False)
+					else:
+						if i._tophalf_busy == True:				#Clear bottomblock
+							i.markAvailable(False, True)
+						else:
+							i.destroySplit()					#Restore block and fill entire area
+							i.markAvailable(False, False)
 
-
-# ***THIS IS A DUMBY FUNCTION TO OPEN ANOTHER WINDOW***
-#this will be replaced by the caller to Brittany's code	
 def appointmentEditor():
 	"""
 	This funciton calles the appointment editor. If one is currently open 
@@ -383,23 +430,29 @@ def appointmentEditor():
 		appointment_editor = Toplevel(root)
 
 def color_rand():
-    r = str(hex(random.randint(0,16))[2])
-    g = str(hex(random.randint(0,16))[2])
-    b = str(hex(random.randint(0,16))[2])
+	"""
+	This function creates a random color and returns it in the form
+	#rgb wher r,g and b are a hexidecimal value from 0 to f
+	"""
+	r = str(hex(random.randint(0,16))[2])
+	g = str(hex(random.randint(0,16))[2])
+	b = str(hex(random.randint(0,16))[2])
 
-    return '#'+r+g+b
+	return '#'+r+g+b
      
-
 def loadText():
 	"""
 	This function loads in the text file, supposed to be called at the beggining of the program
 	"""
+	courses_loaded = []
 	course.load()
 	for i in course.Course.get_all_instances():
 		for j in i:
-			color = color_rand()
-			for x in j.get_days():
-				markBusy(j.get_name(), j.get_start_time(), j.get_end_time(), x, color)
+			if j not in courses_loaded:
+				color = color_rand()
+				courses_loaded.append(j)
+				for x in j.get_days():
+					markBusy(j.get_name(), j.get_start_time(), j.get_end_time(), x, color)
 
 #-----------------------------------------------------Body of Code -------------------------------------------------------------------------
 
@@ -454,5 +507,5 @@ for i in range(grid_row_max+1):
 
 #button
 create_new.grid(column= 0, row=0)
-
+root.title(string='Scheduler')
 root.mainloop()	

@@ -1,1 +1,4 @@
 Math: 8.0 10.5: Tuesday Thursday :
+Enter Class Name: 12.0 12.0: Tuesday :
+Ece 212: 12.0 13.0: Friday Wednesday Monday :
+Math: 8.0 10.5: Tuesday Thursday :
