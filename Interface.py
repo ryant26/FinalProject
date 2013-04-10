@@ -310,24 +310,31 @@ def markBusy(class_name, start, end, day, color):
 	global schedule
 
 	duration = end - start
+	already_split = True
+
 	if duration > 0:
 		for i in schedule[day]:
 			#recursive call to the funciton if the appointment spans multiple frames
 			if start >= i._start_time and start < i._end_time:
+				if i._tophalf_busy == False and i._bottomhalf_busy == False:
+					already_split = False
 				if duration > 0.5:
 					if start == i._start_time:
 						i.markBusy(class_name, color, False, False)
 						markBusy(class_name,start+1, end, day, color)
 					else:
-						i.split()
+						if already_split == False:
+							i.split()
 						i.markBusy(class_name, color, False, True)
 						markBusy(class_name, start+0.5, end, day, color)
 				else:
-						if start == i._start_time: 
-							i.split()
+						if start == i._start_time:
+							if already_split == False: 
+								i.split()
 							i.markBusy(class_name, color, True, False)
 						else:
-							i.split()
+							if already_split == False:
+								i.split()
 							i.markBusy(class_name, color, False, True)
 
 def markAvailable(start, end, day):
