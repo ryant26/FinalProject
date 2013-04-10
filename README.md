@@ -25,13 +25,8 @@ Trying to find a way to work with strings that cody passes, but that doesn't loo
 cody should convert the times he gets into floats eg. 
 	'8:30' = 8.5, '2:00' = 14, "2:30" = 14.5
 	
-Brittany can also change her spin boxes to send numbers to cody instead of strings. Might be the easiest approach...
-Still need:
-	-Need to call Brittany's code when clicking a frame
-			Possible Design Idea:
-			-If she makes her code into a class then each schedule frame can have its own instance of
-			the "appointment editor" and the options will be saved for that particular appointment
+April 9:
+First working prototype is complete!!
 
-
-	-Need code for dragging and dropping, I can write the interface side. Me and Cody will need to colab on how
-	to handle that properly
+Notes:
+I fixed the bug where 2 half hour classes in the same block will cause an overwrite. 
