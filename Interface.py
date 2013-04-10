@@ -198,7 +198,7 @@ Initializes the toplevel menu window, calling each seperate function that
     save.grid(column=5, row=6)
     clear = Button(win, text = "CLEAR", command = lambda: clear_contents(Days, course_name, Times))
     clear.grid(column=3, row=6)
-    delete =  Button(win, text = "DELETE")
+    delete =  Button(win, text = "DELETE", command = deleteContents(Days, course_name, Times) )
     delete.grid(column=2, row=6)
 
 def Course_Input(win, title):
@@ -359,41 +359,50 @@ def markBusy(class_name, start, end, day, color):
 							i.markBusy(class_name, color, False, True)
 
 def markAvailable(start, end, day):
-	global schedule
+	"""
+	This is a recursively defined function that takes an appointment start and end time as well as a day
+	and clears those sections on the schedule interface.
 
+	When it comes across a block with 2 half hour oppointments it will clear only one. If only one half hour appointment occurs
+	in a block then we destory the split and turn the block into a full hour block again.
+	"""
+	#Variables we need
+	global schedule
 	duration = end - start
-	if duration >0:
+
+	#We run while the duration is greater than 0
+	if duration > 0:
+		#Cycle through all of the frames and find the one where the start time occurs 
 		for i in schedule[day]:
-			#recursive call to the function to delete the appointment
+
+			#Recursive part
 			if duration > 0.5:
-				if start ==i._start_time:
+				if start ==i._start_time:					#Hour long block to clear
 					i.markAvailable(False, False)
 					markAvailable(start+1, end, day)
 				else:
-					if i._tophalf_busy == True:
+					if i._tophalf_busy == True:				#Clear bottom block 
 						i.markAvailable(False, True)
 						markAvailable(start + 0.5, end, day)
 					else:
-						i.destroySplit()
+						i.destroySplit()					#Restore block and fill entire area
 						i.markAvailable(False, False)
 						markAvailable(start + 0.5, end, day)
+			#Recursion Ends here 
 			else:
-				if start == i._start_time:
+				if start == i._start_time:					#Cear top blcok
 					if i._bottomhalf_busy == True:
 						i.markAvailable(True, False)
 					else:
-						i.destroySplit()
+						i.destroySplit()					#Restore block and fill entire area
 						i.markAvailable(False, False)
 				else:
-					if i._tophalf_busy == True:
+					if i._tophalf_busy == True:				#Clear bottomblock
 						i.markAvailable(False, True)
 					else:
-						i.destroySplit()
+						i.destroySplit()					#Restore block and fill entire area
 						i.markAvailable(False, False)
 
-
-# ***THIS IS A DUMBY FUNCTION TO OPEN ANOTHER WINDOW***
-#this will be replaced by the caller to Brittany's code	
 def appointmentEditor():
 	"""
 	This funciton calles the appointment editor. If one is currently open 
@@ -407,6 +416,10 @@ def appointmentEditor():
 		appointment_editor = Toplevel(root)
 
 def color_rand():
+	"""
+	This function creates a random color and returns it in the form
+	#rgb wher r,g and b are a hexidecimal value from 0 to f
+	"""
     r = str(hex(random.randint(0,16))[2])
     g = str(hex(random.randint(0,16))[2])
     b = str(hex(random.randint(0,16))[2])
