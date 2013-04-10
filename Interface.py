@@ -197,8 +197,9 @@ Initializes the toplevel menu window, calling each seperate function that
     save = Button(win, text = "SAVE", command = lambda: save_contents(course_name, Times, Days))
     save.grid(column=5, row=6)
     clear = Button(win, text = "CLEAR", command = lambda: clear_contents(Days, course_name, Times))
-
     clear.grid(column=3, row=6)
+    delete =  Button(win, text = "DELETE")
+    delete.grid(column=2, row=6)
 
 def Course_Input(win, title):
     name = Label(win, text = "Course Name:")
