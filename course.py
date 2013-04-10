@@ -72,15 +72,20 @@ class Course:
         """
         return [i for i in Course._instances.values()]
 
-    def del_instance(self, i):
+    def del_instance(self):
         """
         Deletes an instance of Course, specified by object handler.
         If no instance, specifically returns NONE
         """
-        if i in self._instances:
-            del(Person._instances[i])
-        else:
-            return None
+        print(Course.get_all_instances())
+        for i in Course.get_all_instances():
+            for j in i:
+                if self == j:
+                    del(j)
+        del(self)
+        print(Course.get_all_instances())
+        return None
+            
 
     def change_time(self, start, end):
         """
