@@ -185,7 +185,7 @@ class ScheduleFrame():
 
 def MenuWin(name_c, time_list, day_list):
     """
-Initializes the toplevel menu window, calling each seperate function that
+	Initializes the toplevel menu window, calling each seperate function that
     """
     win = Toplevel()
     win.title(string= "Class Editor")
