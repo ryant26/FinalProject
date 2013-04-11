@@ -52,6 +52,8 @@ class ScheduleFrame():
 		self._tophalf_busy = False
 		self._bottomhalf_busy = False
 		self._name = None
+		self._topname = None
+		self._bottomname = None
 		self._name_appt = None
 		parent.title(string= "Schedule Builder")
 
@@ -135,16 +137,22 @@ class ScheduleFrame():
 
 		color = 'white'
 		if top == False and bottom == False:
-			self._name.grid_forget()		
-			self._name.configure(background='black')
+			for i in self._frame.grid_slaves():
+				i.grid_forget()
 			self._frame.configure(background=color)
 
 		if top == True:
-			self._topname.forget()
+			for i in self._tophalf.grid_slaves():
+				i.grid_forget()
+			self._topname = None
+			self._tophalf_busy = None
 			self._tophalf.configure(background=color)
 
 		if bottom == True:
-			self._bottomname.forget()
+			for i in self._bottomhalf.grid_slaves():
+				i.grid_forget()
+			self._bottomname = None
+			self._bottomhalf_busy = None
 			self._bottomhalf.configure(background=color)
 
 
@@ -179,18 +187,13 @@ class ScheduleFrame():
 		"""
 		If we no longer need the frame to be split, this can be called to destroy the split
 		"""
-		#Delete the Class Label Names
-		if self._topname:
-				self._topname.forget()
-		if self._bottomname:
-			self._bottomname.forget()
-
-		self._tophalf.forget()
-		self._bottomhalf.forget()
-
-		self._tophalf = None
-		self._bottomhalf = None
-
+		for w in self._frame.grid_slaves():
+			w.grid_forget()
+		self._name = None
+		self._topname = None
+		self._bottomname = None
+		self._tophalf_busy = None
+		self._bottomhalf_busy = None
 #------------------------------------------------Appointment Editor---------------------------------------------------
 
 def MenuWin(name_c, time_list, day_list):
@@ -276,7 +279,7 @@ def save_contents(course_name, Times, Days):
     for i in app.get_days():
         markBusy(app.get_name(), app.get_start_time(), app.get_end_time(), i, color)
 
-    course.save()
+    #course.save()
     
 def get_contents(course_name, Times, Days):
     name_c = course_name.get()
@@ -318,8 +321,16 @@ def clear_contents(Days, course_name, Times):
 
 def delete_contents(Days, course_name, Times):
 	info = get_contents(course_name, Times, Days)
-	for i in info[2]:
-		markAvailable(info[1][0], info[1][1], i)
+	for i in course.Course.get_all_instances():
+		for j in i:
+			if info[0]==j.get_name():
+				course_object = j
+				break
+	for i in course_object.get_days():
+		markAvailable(course_object.get_start_time(), course_object.get_end_time(), i)
+
+	course_object.del_instance()
+	#course.save()
 #------------------------------------------------Logic Functions-----------------------------------------------------
 
 def markBusy(class_name, start, end, day, color):
@@ -408,6 +419,7 @@ def markAvailable(start, end, day):
 						if i._bottomhalf_busy == True:
 							i.markAvailable(True, False)
 						else:
+							print("should be printing")
 							i.destroySplit()					#Restore block and fill entire area
 							i.markAvailable(False, False)
 					else:
