@@ -4,7 +4,7 @@ import random
 class Course:
     """
     Will initialize a class using the following format for info:
-    info = ( "course name", [start time, end time], [days])
+    info = ( "course name", [start time, end time], [days], color=)
 
     >>> course = Course(("ECE 212", [8, 9], ["Monday", "Wednesday", "Friday"]))
     >>> course.name == "ECE 212"
@@ -19,15 +19,21 @@ class Course:
     [('Monday', 8, 9), ('Wednesday', 8, 9), ('Friday', 8, 9)]
     """
 
-
+    # create an empty list, will contain all
+    # instances of Course objects
     _instances = []
 
     def __init__(self, info, color = None):
+        """
+        Initialize an instance of a Course object
+        """
         self.name = info[0]
         times = info[1]
         self.start = times[0]
         self.end = times[1]
         self.days = info[2]
+        # color will only be None if it is not
+        # a homework type Course object
         if color != None:
             self.color = color
         else:
@@ -76,17 +82,14 @@ class Course:
 
     def del_instances(self):
         """
-        Deletes an instance of Course, specified by object handler.
+        Deletes all instances of the same name,
+        but not necessarily the same object handler. 
         Returns NONE
         """
-
         for i in Course.get_all_instances():
             if i.name == self.name:
                 Course._instances.remove(i)
-
-            
-        
-                
+   
 
     def change_time(self, start, end):
         """
@@ -143,21 +146,23 @@ def get_all_times():
     of time used in that day as the value.
     Used in the homework algorithm to 
     determine what day is best to place 
-    homework assignments
+    homework assignments.
     """
     all_courses = Course.get_all_instances()
     days_of_week = {'Sunday': 0, 'Monday': 0, 'Tuesday': 0, 'Wednesday': 0, 'Thursday': 0, 'Friday': 0, 'Saturday': 0}
     courses = []
-    homework = []
+    # removes all possible duplicate instances for calculation
     for j in all_courses:
         if j not in courses:
             courses.append(j)
 
-    
+    # calculates the time of each course for each day of the week,
+    # and keeps a running total
     for i in courses:
         for j in i.days:
             days_of_week[j] = days_of_week[j] + (i.end-i.start)
-    
+    # returns a dictionary with the values as total occupied
+    # time in that day
     return days_of_week
             
 def color_rand():
@@ -165,9 +170,9 @@ def color_rand():
 	This function creates a random color and returns it in the form
 	#rgb wher r,g and b are a hexidecimal value from 0 to f
 	"""
-	r = str(hex(random.randint(0,16))[2])
-	g = str(hex(random.randint(0,16))[2])
-	b = str(hex(random.randint(0,16))[2])
+	r = str(hex(random.randint(1,16))[2])
+	g = str(hex(random.randint(1,16))[2])
+	b = str(hex(random.randint(1,16))[2])
 
 	return '#'+r+g+b
 
@@ -177,17 +182,17 @@ def save():
     object. Called whenever you wish to save.
     """
 
-    #retrieve all instances of courses to save
+    # retrieve all instances of courses to save
     courses = Course.get_all_instances()
     saved = []
     opened = open("save.txt", 'w')
-    #remove duplicates (because an instance saves per day of class)
+    # remove duplicates (because an instance saves per day of class)
     for j in courses:
         if j not in saved:
             saved.append(j)
     for i in saved:
-        #remove nested list to get to the object
-            #formatting, saves it very specifically
+        # save in specific format for reloading, saves
+        # a course object per line
         st_start = str(i.start)
         st_end = str(i.end)
         opened.write(i.name)

@@ -327,7 +327,7 @@ def get_HW(HW_name, HW_time, HW_due):
  
 def Calc_HW(HW_name, HW_time, HW_due):
     (name_HW, hours, Due_day) = get_HW(HW_name, HW_time, HW_due)
-    color = color_rand()
+    color = course.color_rand()
 
     while hours:
         Work_time = course.get_all_times()    
@@ -524,16 +524,6 @@ def appointmentEditor():
 		appointment_editor.destroy()
 		appointment_editor = Toplevel(root)
 
-def color_rand():
-	"""
-	This function creates a random color and returns it in the form
-	#rgb wher r,g and b are a hexidecimal value from 0 to f
-	"""
-	r = str(hex(random.randint(0,16))[2])
-	g = str(hex(random.randint(0,16))[2])
-	b = str(hex(random.randint(0,16))[2])
-
-	return '#'+r+g+b
      
 def loadText():
 	"""
