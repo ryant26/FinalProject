@@ -274,9 +274,29 @@ def set_times(win, time_list):
     return time_list
 
 def save_contents(course_name, Times, Days):
-    print("SAVING!!!")
     info = get_contents(course_name, Times, Days)
+    print('start', info[1][0])
+    print('end', info[1][1])
+    for i in course.Course.get_all_instances():
+    	print('instance start', i.get_start_time())
+    	print('instance end', i.get_end_time())
+    	if info[1][0] > i.get_start_time() and info[1][0] < i.get_end_time():
+    		print('start conflict')
+    		for j in info[2]:
+    			if j in i.get_days():
+    				return None
+    	elif info[1][1] > i.get_start_time() and info[1][1] < i.get_end_time():
+    		print('end conflict')
+    		for j in info[2]:
+    			if j in i.get_days():
+    				return None
+    	elif info[1][0] == i.get_start_time():
+    		print('same start')
+    		for j in info[2]:
+    			if j in i.get_days():
+    				return None
     clear_contents(Days, course_name, Times)
+    print("SAVING!!!")
     app = course.Course((info))
     color = color_rand()
     for i in app.get_days():
