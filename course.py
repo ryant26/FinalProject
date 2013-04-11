@@ -76,7 +76,7 @@ class Course:
         print(Course.get_all_instances())
         for i in Course.get_all_instances():
             if i == self:
-                Course._instances.pop(i)
+                Course._instances.remove(i)
         del(self)
         print(Course.get_all_instances())
         return None
