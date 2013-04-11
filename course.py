@@ -22,7 +22,7 @@ class Course:
 
     _instances = []
 
-    def __init__(self, info, free = False):
+    def __init__(self, info, color = None):
         self.name = info[0]
         times = info[1]
         self.start = times[0]
@@ -31,7 +31,7 @@ class Course:
         # assigns True or False for use with
         # homework algorithm, won't factor in
         # free time
-        self.free = free
+        self.color = color
 
         # insert into collection of instances
         Course._instances.append(self)
@@ -149,21 +149,15 @@ def get_all_times():
     homework assignments
     """
     all_courses = Course.get_all_instances()
-    all_homework = Homework.get_all_instances()
     days_of_week = {'Sunday': 0, 'Monday': 0, 'Tuesday': 0, 'Wednesday': 0, 'Thursday': 0, 'Friday': 0, 'Saturday': 0}
     courses = []
     homework = []
     for j in all_courses:
         if j not in courses:
             courses.append(j)
-    for j in all_homework:
-        if j not in homework:
-            homework.append(j)
+
     
     for i in courses:
-        for j in i.days:
-            days_of_week[j] = days_of_week[j] + (i.end-i.start)
-    for i in homework:
         for j in i.days:
             days_of_week[j] = days_of_week[j] + (i.end-i.start)
     
@@ -201,6 +195,8 @@ def save():
             opened.write(x)
             opened.write(' ')
         opened.write(':')
+        opened.write(str(i.color))
+        opened.write(':')
         opened.write('\n')
     #close file, saves memory
     opened.close()
@@ -227,6 +223,11 @@ def load():
         times[1] = float(times[1])
         days = i[2]
         days = days.split()
+        if i[3] != None:
+            Course((i[0], times, days, i[3]))
+            continue
+                      
+                  
         # create course objects based on data read in
         course = Course((i[0], times, days))
         
