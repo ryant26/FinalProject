@@ -19,7 +19,7 @@ global root
 
 root = Tk()
 grid_col_max=8
-grid_row_max=10
+grid_row_max=11
 schedule = {}
 frame_column = 1
 frame_row = 1
@@ -114,7 +114,7 @@ class ScheduleFrame():
 			self._tophalf.configure(background=color)
 			self._topname = ttk.Label(self._tophalf, text = class_name, background=color)
 			self._tophalf_busy = True
-			self._topname.grid(column=0, row=0)
+			self._topname.grid(column=0, row=1)
 			#Bind all the functions we want to each frame
 			self._topname.bind('<Double-Button-1>', self.appointmentEditor)
 
@@ -123,7 +123,7 @@ class ScheduleFrame():
 			self._bottomhalf.configure(background=color)
 			self._bottomname = ttk.Label(self._bottomhalf, text = class_name, background=color)
 			self._bottomhalf_busy = True
-			self._bottomname.grid(column=0, row=0)
+			self._bottomname.grid(column=0, row=1)
 			#Bind all the functions we want to each frame
 			self._bottomname.bind('<Double-Button-1>', self.appointmentEditor)
 
@@ -177,8 +177,8 @@ class ScheduleFrame():
 
 
 		#Set up the two split frames to take up half the area of the main frame
-		self._tophalf.grid(column=0, row=0, sticky='nsew')
-		self._bottomhalf.grid(column=0, row=1, sticky='nsew')
+		self._tophalf.grid(column=0, row=1, sticky='nsew')
+		self._bottomhalf.grid(column=0, row=2, sticky='nsew')
 		self._tophalf.columnconfigure(0, minsize=70, weight=1)
 		self._tophalf.rowconfigure(0, minsize=25, weight=1)
 		self._bottomhalf.columnconfigure(0, minsize=70, weight=1)
@@ -562,19 +562,19 @@ def loadText():
 #This is to create a new appointment
 create_new = ttk.Button(root, text='New Appointment', padding=(5,5,5,5), command=appointmentEditor)
 #This creates a new assignment
-HW_Button = ttk.Button(root, text='Add Assignment' , command= HW_win)
+HW_Button = ttk.Button(root, text='Add Assignment', padding=(5,5,5,5), command= HW_win)
 
 
 #A loop to create a grid of frames (our shedule)
 
 for i in range(number_of_days):
-	ttk.Label(text=str(days_of_week[i])).grid(row = 0, column = i+1)			#create the day Labels
+	ttk.Label(text=str(days_of_week[i])).grid(row = 1, column = i+1)			#create the day Labels
 	for j in range(hours_in_day):
 
 		#Create a frame for every hour of every day"
 
 		frame = ScheduleFrame(root, 1, 'solid', j+8, j+9, days_of_week[i])
-		frame.grid('nwes', j+1, i+1)
+		frame.grid('nwes', j+2, i+1)
 
 		#Bind all the functions we want to each frame
 		frame.bind('<Enter>', frame.hover)
@@ -593,7 +593,7 @@ for i in range(number_of_days):
 
 #This loop prints the labels (time of day) along the left side of the schedule 
 for i in range(hours_in_day):
-	ttk.Label(text=str(i+8)+':00').grid(column=0, row=i+1)		
+	ttk.Label(text=str(i+8)+':00').grid(column=0, row=i+2)		
 
 #----------------------------------------------TEST CODE -------------------------------------------------------
 """
@@ -611,7 +611,7 @@ for i in range(grid_row_max+1):
 #------------------------------------------grid all widgets------------------------------------------------
 
 #button
-create_new.grid(column= 0, row=0, sticky=N)
-HW_Button.grid(column=0, row=0, sticky =S)
+create_new.grid(column= 0, row=0)
+HW_Button.grid(column=0, row=1)
 root.title(string='Scheduler')
 root.mainloop()	
