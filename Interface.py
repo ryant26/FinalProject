@@ -217,6 +217,21 @@ def MenuWin(name_c, time_list, day_list):
     delete =  Button(win, text = "DELETE", command = lambda: delete_contents(Days, course_name, Times) )
     delete.grid(column=2, row=6)
 
+def HW_win():
+    HW = Toplevel()
+    HW.title(string= "Homework Assignment")
+    HW_ttl = Label(HW, text = "Assignment Information")
+    HW_ttl.grid(column=1, row=0, pady=5)
+    HW_name = Course_Input(HW, "Enter Assingment Title")
+    HW_due = set_days(HW, [ ])
+    HW_time = StringVar()
+    HW_time_Lab = Label(HW, text = "Approximate Time for Completion(In hours)")
+    HW_time_Lab.grid(column=0, row=5, columnspan=2)
+    HW_time_sel = OptionMenu(HW, HW_time, '1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
+    HW_time_sel.grid(column=2, row=5)
+    save = Button(HW, text = "SAVE", command = lambda: Calc_HW(HW_name, HW_time, HW_due))
+    save.grid(column=5, row=6)
+
 def Course_Input(win, title):
     name = Label(win, text = "Course Name:")
     name.grid(column=0, row=2)
@@ -303,6 +318,57 @@ def save_contents(course_name, Times, Days):
         markBusy(app.get_name(), app.get_start_time(), app.get_end_time(), i, color)
 
     course.save()
+
+    
+def get_HW(HW_name, HW_time, HW_due):
+    name_HW = HW_name.get()
+    for key, value in HW_due.items():
+        state = value.get()
+        if state != 0:
+            Due_day = key
+    hours = HW_time.get()
+    hours = float(hours)
+    HW_info = (name_HW, hours, Due_day)
+
+    return HW_info
+ 
+def Calc_HW(HW_name, HW_time, HW_due):
+    (name_HW, hours, Due_day) = get_HW(HW_name, HW_time, HW_due)
+    color = color_rand()
+
+    while hours:
+        Work_time = course.get_all_times()    
+        if Due_day in Work_time:
+            Work_time.pop(Due_day)
+        (cur_day, time) = min(Work_time.items(), key = lambda x: x[1])
+        avail_hours = avail_time(cur_day)
+        if avail_hours == [ ]:
+            avail_hours = [10.0]
+        
+        markBusy(name_HW, avail_hours[0], avail_hours[0] + .5, cur_day, color)
+        course.Course((name_HW, [avail_hours[0], avail_hours[0] + .5], [cur_day]))
+        Work_time[cur_day] = Work_time[cur_day] + 2
+        print(Work_time)
+        hours = hours - .5
+        course.save()
+
+def avail_time(Day):
+    courses = course.Course.get_all_instances()
+    time_starts = [ ]
+    time_ends = [ ]
+    avail_hours = [ ]
+    for i in courses:
+        if Day in i.days:
+            print('found')
+            time_starts.append(i.start)
+            time_ends.append(i.end)
+    for j in time_ends:
+        if j in time_starts: continue
+        else:
+            avail_hours.append(j)
+
+
+    return avail_hours
     
 def get_contents(course_name, Times, Days):
     name_c = course_name.get()
@@ -495,6 +561,8 @@ def loadText():
 
 #This is to create a new appointment
 create_new = ttk.Button(root, text='New Appointment', padding=(5,5,5,5), command=appointmentEditor)
+#This creates a new assignment
+HW_Button = ttk.Button(root, text='Add Assignment' , command= HW_win)
 
 
 #A loop to create a grid of frames (our shedule)
@@ -543,6 +611,7 @@ for i in range(grid_row_max+1):
 #------------------------------------------grid all widgets------------------------------------------------
 
 #button
-create_new.grid(column= 0, row=0)
+create_new.grid(column= 0, row=0, sticky=N)
+HW_Button.grid(column=0, row=0, sticky =S)
 root.title(string='Scheduler')
 root.mainloop()	
