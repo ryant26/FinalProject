@@ -20,7 +20,7 @@ class Course:
     """
 
 
-    _instances = {}
+    _instances = []
 
     def __init__(self, info, free = False):
         self.name = info[0]
@@ -34,12 +34,8 @@ class Course:
         self.free = free
 
         # insert into collection of instances
-        for i in self.days:
-            if i in Course._instances:
-                Course._instances[i].append(self)
-            else:
-                Course._instances[i]=[self]
-
+        Course._instances.append(self)
+        print(Course._instances)
     def get_name(self):
         """
         Returns the name of the course
@@ -70,7 +66,7 @@ class Course:
         for you to be able to find all possible
         courses in current schedule
         """
-        return [i for i in Course._instances.values()]
+        return [i for i in Course._instances]
 
     def del_instance(self):
         """
@@ -134,7 +130,86 @@ class Course:
         for i in self.days:
             per_day.append((i, self.start, self.end))
         return per_day
+class Homework:
+    """
+    Defines objects as homework. Very similar to 
+    a course object, but it only has a single time
+    and it has a due date.
+    """
     
+    _instances = {}
+    
+    def __init__(info):
+        self.name = info[0]
+        self.time = info[1]
+        self.date = [info[2]]
+        
+        for i in self.date:
+            if i in Homework._instances:
+                Homework._instances[i].append(self)
+            else:
+                Homework._instances[i]=[self]
+    def get_homework_name(self):
+        """
+        Returns the name of the assignment
+        """
+        return self.name
+    
+    def get_due_date(self):
+        """
+        Returns the due date of the assignment
+        """
+        return self.date
+
+    def get_assignment_time(self):
+        """
+        Returns amount of time required
+        to do assignment
+        """
+        return self.time
+    def get_all_instances():
+        """
+        Gets all instances of Course class, allows
+        for you to be able to find all possible
+        courses in current schedule
+        """
+        return [i for i in Homework._instances]
+def get_all_times():
+    """
+    Returns a dictionary with the days of
+    the week as keys and the total amount
+    of time used in that day as the value.
+    Used in the homework algorithm to 
+    determine what day is best to place 
+    homework assignments
+    """
+    all_courses = Course.get_all_instances()
+    all_homework = Homework.get_all_instances()
+    days_of_week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    courses = []
+    homework = []
+    for i in all_courses:
+        for j in i:
+            if j not in courses:
+                courses.append(j)
+    for i in all_homework:
+        for j in i:
+            if j not in homework:
+                homework.append(j)
+    
+    for i in courses:
+        pass
+
+def save_homework():
+    """
+    Saves all objects of type Homework into
+    a text file separate from the storing of
+    the courses due to different requirements
+    """
+    all_homework = Homework.get_all_instances()
+    opened = open("save_homework.txt", 'w')
+    
+
 def save():
     """
     Saves all objects that exist as instances of a Course
@@ -145,31 +220,32 @@ def save():
     courses = Course.get_all_instances()
     saved = []
     opened = open("save.txt", 'w')
-    #remove duplicates (because an instance saves per day of course)
+    #remove duplicates (because an instance saves per day of class)
     for j in courses:
         if j not in saved:
             saved.append(j)
-    for j in saved:
+    for i in saved:
         #remove nested list to get to the object
-        for i in j:
             #formatting, saves it very specifically
-            st_start = str(i.start)
-            st_end = str(i.end)
-            opened.write(i.name)
-            opened.write(': ')
-            opened.write(st_start)
+        st_start = str(i.start)
+        st_end = str(i.end)
+        opened.write(i.name)
+        opened.write(': ')
+        opened.write(st_start)
+        opened.write(' ')
+        opened.write(st_end)
+        opened.write(': ')
+        for x in i.days:
+            opened.write(x)
             opened.write(' ')
-            opened.write(st_end)
-            opened.write(': ')
-            for x in i.days:
-                opened.write(x)
-                opened.write(' ')
-            opened.write(':')
-            opened.write('\n')
+        opened.write(':')
+        opened.write('\n')
     #close file, saves memory
     opened.close()
             
-
+def save_homework():
+    """
+    """
 
 def load():
     """
