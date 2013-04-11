@@ -144,15 +144,15 @@ class ScheduleFrame():
 		if top == True:
 			for i in self._tophalf.grid_slaves():
 				i.destroy()
-			self._topname = None
-			self._tophalf_busy = None
+			self._topname = False
+			self._tophalf_busy = False
 			self._tophalf.configure(background=color)
 
 		if bottom == True:
 			for i in self._bottomhalf.grid_slaves():
 				i.destroy()
-			self._bottomname = None
-			self._bottomhalf_busy = None
+			self._bottomname = False
+			self._bottomhalf_busy = False
 			self._bottomhalf.configure(background=color)
 
 
@@ -189,11 +189,11 @@ class ScheduleFrame():
 		"""
 		for w in self._frame.grid_slaves():
 			w.destroy()
-		self._name = None
-		self._topname = None
-		self._bottomname = None
-		self._tophalf_busy = None
-		self._bottomhalf_busy = None
+		self._name = False
+		self._topname = False
+		self._bottomname = False
+		self._tophalf_busy = False
+		self._bottomhalf_busy = False
 #------------------------------------------------Appointment Editor---------------------------------------------------
 
 def MenuWin(name_c, time_list, day_list):
@@ -279,7 +279,7 @@ def save_contents(course_name, Times, Days):
     for i in app.get_days():
         markBusy(app.get_name(), app.get_start_time(), app.get_end_time(), i, color)
 
-    #course.save()
+    course.save()
     
 def get_contents(course_name, Times, Days):
     name_c = course_name.get()
@@ -328,8 +328,8 @@ def delete_contents(Days, course_name, Times):
 	for i in course_object.get_days():
 		markAvailable(course_object.get_start_time(), course_object.get_end_time(), i)
 
-	#course_object.del_instance()
-	#course.save()
+	course_object.del_instance()
+	course.save()
 #------------------------------------------------Logic Functions-----------------------------------------------------
 
 def markBusy(class_name, start, end, day, color):
