@@ -460,9 +460,9 @@ def loadText():
 	for i in course.Course.get_all_instances():
 		if i not in courses_loaded:
 			color = color_rand()
-			courses_loaded.append(j)
-			for x in j.get_days():
-				markBusy(j.get_name(), j.get_start_time(), j.get_end_time(), x, color)
+			courses_loaded.append(i)
+			for x in i.get_days():
+				markBusy(i.get_name(), i.get_start_time(), i.get_end_time(), x, color)
 
 #-----------------------------------------------------Body of Code -------------------------------------------------------------------------
 
