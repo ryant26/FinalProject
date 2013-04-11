@@ -35,7 +35,7 @@ class Course:
 
         # insert into collection of instances
         Course._instances.append(self)
-
+        print(Course._instances)
     def get_name(self):
         """
         Returns the name of the course
