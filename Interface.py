@@ -307,9 +307,8 @@ def save_contents(course_name, Times, Days):
     				return None
     clear_contents(Days, course_name, Times)
     app = course.Course((info))
-    color = color_rand()
     for i in app.get_days():
-        markBusy(app.get_name(), app.get_start_time(), app.get_end_time(), i, color)
+        markBusy(app.get_name(), app.get_start_time(), app.get_end_time(), i, app.color)
 
     course.save()
 
@@ -340,7 +339,7 @@ def Calc_HW(HW_name, HW_time, HW_due):
             avail_hours = [10.0]
         
         markBusy(name_HW, avail_hours[0], avail_hours[0] + .5, cur_day, color)
-        course.Course((name_HW, [avail_hours[0], avail_hours[0] + .5], [cur_day]))
+        course.Course((name_HW, [avail_hours[0], avail_hours[0] + .5], [cur_day]), color=color)
         Work_time[cur_day] = Work_time[cur_day] + 2
         hours = hours - .5
         course.save()
@@ -543,10 +542,9 @@ def loadText():
 	course.load()
 	for i in course.Course.get_all_instances():
 		if i not in courses_loaded:
-			color = color_rand()
 			courses_loaded.append(i)
 			for x in i.get_days():
-				markBusy(i.get_name(), i.get_start_time(), i.get_end_time(), x, color)
+				markBusy(i.get_name(), i.get_start_time(), i.get_end_time(), x, i.color)
 
 #-----------------------------------------------------Body of Code -------------------------------------------------------------------------
 

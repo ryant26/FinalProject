@@ -31,7 +31,10 @@ class Course:
         # assigns True or False for use with
         # homework algorithm, won't factor in
         # free time
-        self.color = color
+        if color != None:
+            self.color = color
+        else:
+            self.color = color_rand()
 
         # insert into collection of instances
         Course._instances.append(self)
@@ -162,7 +165,16 @@ def get_all_times():
     
     return days_of_week
             
+def color_rand():
+	"""
+	This function creates a random color and returns it in the form
+	#rgb wher r,g and b are a hexidecimal value from 0 to f
+	"""
+	r = str(hex(random.randint(0,16))[2])
+	g = str(hex(random.randint(0,16))[2])
+	b = str(hex(random.randint(0,16))[2])
 
+	return '#'+r+g+b
 
 def save():
     """
@@ -221,13 +233,8 @@ def load():
         times[1] = float(times[1])
         days = i[2]
         days = days.split()
-        if i[3] != None:
-            Course((i[0], times, days, i[3]))
-            continue
-                      
-                  
-        # create course objects based on data read in
-        course = Course((i[0], times, days))
+        Course((i[0], times, days), color=i[3])
+
         
 
 if __name__ == "__main__":
