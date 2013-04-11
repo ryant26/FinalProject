@@ -407,12 +407,13 @@ def delete_contents(Days, course_name, Times):
 	for i in course.Course.get_all_instances():
 		if info[0]==i.get_name():
 			course_object = i
-			break
-	#Delete the course on all days that it happens
-	for i in course_object.get_days():
-		markAvailable(course_object.get_start_time(), course_object.get_end_time(), i)
+			#Delete the course on all days that it happens
+			for i in course_object.get_days():
+				markAvailable(course_object.get_start_time(), course_object.get_end_time(), i)
+				course_object.del_instances()
 
-	course_object.del_instance()
+
+	
 	course.save()
 #------------------------------------------------Logic Functions-----------------------------------------------------
 

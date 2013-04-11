@@ -71,26 +71,18 @@ class Course:
         """
         return [i for i in Course._instances]
 
-    def del_instance(self):
+    def del_instances(self):
         """
         Deletes an instance of Course, specified by object handler.
         Returns NONE
         """
 
         for i in Course.get_all_instances():
-            if i == self:
+            if i.name == self.name:
                 Course._instances.remove(i)
-        del(self)
-        return None
+
             
-    def del_homework_instance(self):
-        """
-        Deletes all instances of a homework type course object.
-        This is required because the homework algorithm will
-        store the homework as multiple course objects.
-        """
-        for i in range(0, Course.get_all_instances().count(self)):
-            Course._instances.remove(self)
+        
                 
 
     def change_time(self, start, end):
