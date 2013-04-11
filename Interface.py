@@ -138,19 +138,19 @@ class ScheduleFrame():
 		color = 'white'
 		if top == False and bottom == False:
 			for i in self._frame.grid_slaves():
-				i.grid_forget()
+				i.destroy()
 			self._frame.configure(background=color)
 
 		if top == True:
 			for i in self._tophalf.grid_slaves():
-				i.grid_forget()
+				i.destroy()
 			self._topname = None
 			self._tophalf_busy = None
 			self._tophalf.configure(background=color)
 
 		if bottom == True:
 			for i in self._bottomhalf.grid_slaves():
-				i.grid_forget()
+				i.destroy()
 			self._bottomname = None
 			self._bottomhalf_busy = None
 			self._bottomhalf.configure(background=color)
@@ -188,7 +188,7 @@ class ScheduleFrame():
 		If we no longer need the frame to be split, this can be called to destroy the split
 		"""
 		for w in self._frame.grid_slaves():
-			w.grid_forget()
+			w.destroy()
 		self._name = None
 		self._topname = None
 		self._bottomname = None
@@ -322,14 +322,13 @@ def clear_contents(Days, course_name, Times):
 def delete_contents(Days, course_name, Times):
 	info = get_contents(course_name, Times, Days)
 	for i in course.Course.get_all_instances():
-		for j in i:
-			if info[0]==j.get_name():
-				course_object = j
-				break
+		if info[0]==i.get_name():
+			course_object = i
+			break
 	for i in course_object.get_days():
 		markAvailable(course_object.get_start_time(), course_object.get_end_time(), i)
 
-	course_object.del_instance()
+	#course_object.del_instance()
 	#course.save()
 #------------------------------------------------Logic Functions-----------------------------------------------------
 
@@ -459,12 +458,11 @@ def loadText():
 	courses_loaded = []
 	course.load()
 	for i in course.Course.get_all_instances():
-		for j in i:
-			if j not in courses_loaded:
-				color = color_rand()
-				courses_loaded.append(j)
-				for x in j.get_days():
-					markBusy(j.get_name(), j.get_start_time(), j.get_end_time(), x, color)
+		if i not in courses_loaded:
+			color = color_rand()
+			courses_loaded.append(j)
+			for x in j.get_days():
+				markBusy(j.get_name(), j.get_start_time(), j.get_end_time(), x, color)
 
 #-----------------------------------------------------Body of Code -------------------------------------------------------------------------
 
