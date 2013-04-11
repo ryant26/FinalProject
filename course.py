@@ -73,12 +73,11 @@ class Course:
         Deletes an instance of Course, specified by object handler.
         Returns NONE
         """
-        print(Course.get_all_instances())
+
         for i in Course.get_all_instances():
             if i == self:
                 Course._instances.remove(i)
         del(self)
-        print(Course.get_all_instances())
         return None
             
     def del_homework_instance(self):
@@ -170,7 +169,6 @@ def save():
     Saves all objects that exist as instances of a Course
     object. Called whenever you wish to save.
     """
-    print(get_all_times())
 
     #retrieve all instances of courses to save
     courses = Course.get_all_instances()

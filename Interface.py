@@ -22,7 +22,7 @@ grid_col_max=8
 grid_row_max=11
 schedule = {}
 frame_column = 1
-frame_row = 1
+frame_row = 2
 number_of_days = 7
 hours_in_day = 10
 days_of_week = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -114,7 +114,7 @@ class ScheduleFrame():
 			self._tophalf.configure(background=color)
 			self._topname = ttk.Label(self._tophalf, text = class_name, background=color)
 			self._tophalf_busy = True
-			self._topname.grid(column=0, row=1)
+			self._topname.grid(column=0, row=0)
 			#Bind all the functions we want to each frame
 			self._topname.bind('<Double-Button-1>', self.appointmentEditor)
 
@@ -123,7 +123,7 @@ class ScheduleFrame():
 			self._bottomhalf.configure(background=color)
 			self._bottomname = ttk.Label(self._bottomhalf, text = class_name, background=color)
 			self._bottomhalf_busy = True
-			self._bottomname.grid(column=0, row=1)
+			self._bottomname.grid(column=0, row=0)
 			#Bind all the functions we want to each frame
 			self._bottomname.bind('<Double-Button-1>', self.appointmentEditor)
 
@@ -177,8 +177,8 @@ class ScheduleFrame():
 
 
 		#Set up the two split frames to take up half the area of the main frame
-		self._tophalf.grid(column=0, row=1, sticky='nsew')
-		self._bottomhalf.grid(column=0, row=2, sticky='nsew')
+		self._tophalf.grid(column=0, row=0, sticky='nsew')
+		self._bottomhalf.grid(column=0, row=1, sticky='nsew')
 		self._tophalf.columnconfigure(0, minsize=70, weight=1)
 		self._tophalf.rowconfigure(0, minsize=25, weight=1)
 		self._bottomhalf.columnconfigure(0, minsize=70, weight=1)
@@ -233,7 +233,7 @@ def HW_win():
     save.grid(column=5, row=6)
 
 def Course_Input(win, title):
-    name = Label(win, text = "Course Name:")
+    name = Label(win, text = "Name:")
     name.grid(column=0, row=2)
     enter = Entry(win, relief = 'sunken')
     course = StringVar()
@@ -245,15 +245,17 @@ def Course_Input(win, title):
 
 def set_days(win, day_list):
     Days = {
+        'Sunday':0,
         'Monday':0,
         'Tuesday':0,
         'Wednesday':0,
         'Thursday':0,
-        'Friday':0
+        'Friday':0,
+        'Sunday':0
         }
             
 
-    List_Days = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+    List_Days = [ 'Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     counter=0
     for key in List_Days:
         Days[key] = IntVar()
@@ -272,7 +274,7 @@ def set_times(win, time_list):
     start = Label(win, text = "Enter Start Time:")
     start.grid(column=0, row=4)
 
-    time_start = OptionMenu(win, time_1, '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30', '24:00')
+    time_start = OptionMenu(win, time_1, '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30')
     time_start.grid(column=1, row=4)
 
 
@@ -281,7 +283,7 @@ def set_times(win, time_list):
     end = Label(win, text = "Enter End Time:")
     end.grid(column=0, row=5)
     
-    time_end = OptionMenu(win, time_2, '8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30', '24:00')
+    time_end = OptionMenu(win, time_2, '8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00')
     time_end.grid(column=1, row=5)
 
     time_list = (time_1, time_2)
@@ -290,28 +292,20 @@ def set_times(win, time_list):
 
 def save_contents(course_name, Times, Days):
     info = get_contents(course_name, Times, Days)
-    print('start', info[1][0])
-    print('end', info[1][1])
     for i in course.Course.get_all_instances():
-    	print('instance start', i.get_start_time())
-    	print('instance end', i.get_end_time())
     	if info[1][0] > i.get_start_time() and info[1][0] < i.get_end_time():
-    		print('start conflict')
     		for j in info[2]:
     			if j in i.get_days():
     				return None
     	elif info[1][1] > i.get_start_time() and info[1][1] < i.get_end_time():
-    		print('end conflict')
     		for j in info[2]:
     			if j in i.get_days():
     				return None
     	elif info[1][0] == i.get_start_time():
-    		print('same start')
     		for j in info[2]:
     			if j in i.get_days():
     				return None
     clear_contents(Days, course_name, Times)
-    print("SAVING!!!")
     app = course.Course((info))
     color = color_rand()
     for i in app.get_days():
@@ -348,7 +342,6 @@ def Calc_HW(HW_name, HW_time, HW_due):
         markBusy(name_HW, avail_hours[0], avail_hours[0] + .5, cur_day, color)
         course.Course((name_HW, [avail_hours[0], avail_hours[0] + .5], [cur_day]))
         Work_time[cur_day] = Work_time[cur_day] + 2
-        print(Work_time)
         hours = hours - .5
         course.save()
 
@@ -359,7 +352,7 @@ def avail_time(Day):
     avail_hours = [ ]
     for i in courses:
         if Day in i.days:
-            print('found')
+
             time_starts.append(i.start)
             time_ends.append(i.end)
     for j in time_ends:
@@ -414,7 +407,6 @@ def delete_contents(Days, course_name, Times):
 	#find the course we are trying to delete
 	for i in course.Course.get_all_instances():
 		if info[0]==i.get_name():
-			print(info[0])
 			course_object = i
 			break
 	#Delete the course on all days that it happens
@@ -511,7 +503,6 @@ def markAvailable(start, end, day):
 						if i._bottomhalf_busy == True:
 							i.markAvailable(True, False)
 						else:
-							print("should be printing")
 							i.destroySplit()					#Restore block and fill entire area
 							i.markAvailable(False, False)
 					else:
