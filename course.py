@@ -28,9 +28,6 @@ class Course:
         self.start = times[0]
         self.end = times[1]
         self.days = info[2]
-        # assigns True or False for use with
-        # homework algorithm, won't factor in
-        # free time
         if color != None:
             self.color = color
         else:
@@ -62,6 +59,12 @@ class Course:
         Returns end time of course
         """
         return self.end
+    
+    def get_color(self):
+        """
+        Returns the color of the object
+        """
+        return self.color
 
     def get_all_instances():
         """

@@ -308,7 +308,7 @@ def save_contents(course_name, Times, Days):
     clear_contents(Days, course_name, Times)
     app = course.Course((info))
     for i in app.get_days():
-        markBusy(app.get_name(), app.get_start_time(), app.get_end_time(), i, app.color)
+        markBusy(app.get_name(), app.get_start_time(), app.get_end_time(), i, app.get_color())
 
     course.save()
 
@@ -545,7 +545,7 @@ def loadText():
 		if i not in courses_loaded:
 			courses_loaded.append(i)
 			for x in i.get_days():
-				markBusy(i.get_name(), i.get_start_time(), i.get_end_time(), x, i.color)
+				markBusy(i.get_name(), i.get_start_time(), i.get_end_time(), x, i.get_color())
 
 #-----------------------------------------------------Body of Code -------------------------------------------------------------------------
 
