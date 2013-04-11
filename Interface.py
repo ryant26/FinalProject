@@ -320,11 +320,15 @@ def clear_contents(Days, course_name, Times):
         Days[key].set(0)
 
 def delete_contents(Days, course_name, Times):
+	#convert all strings to values we can use!
 	info = get_contents(course_name, Times, Days)
+	#find the course we are trying to delete
 	for i in course.Course.get_all_instances():
 		if info[0]==i.get_name():
+			print(info[0])
 			course_object = i
 			break
+	#Delete the course on all days that it happens
 	for i in course_object.get_days():
 		markAvailable(course_object.get_start_time(), course_object.get_end_time(), i)
 
