@@ -35,7 +35,7 @@ class Course:
 
         # insert into collection of instances
         Course._instances.append(self)
-        print(Course._instances)
+
     def get_name(self):
         """
         Returns the name of the course
@@ -75,9 +75,8 @@ class Course:
         """
         print(Course.get_all_instances())
         for i in Course.get_all_instances():
-            for j in i:
-                if self == j:
-                    del(j)
+            if i == self:
+                Course._instances.pop(i)
         del(self)
         print(Course.get_all_instances())
         return None
