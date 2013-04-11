@@ -4,7 +4,7 @@ import random
 class Course:
     """
     Will initialize a class using the following format for info:
-    info = ( "course name", ["start time", "end time"], [days])
+    info = ( "course name", [start time, end time], [days])
 
     >>> course = Course(("ECE 212", [8, 9], ["Monday", "Wednesday", "Friday"]))
     >>> course.name == "ECE 212"
@@ -71,7 +71,7 @@ class Course:
     def del_instance(self):
         """
         Deletes an instance of Course, specified by object handler.
-        If no instance, specifically returns NONE
+        Returns NONE
         """
         print(Course.get_all_instances())
         for i in Course.get_all_instances():
@@ -81,6 +81,15 @@ class Course:
         print(Course.get_all_instances())
         return None
             
+    def del_homework_instance(self):
+        """
+        Deletes all instances of a homework type course object.
+        This is required because the homework algorithm will
+        store the homework as multiple course objects.
+        """
+        for i in range(0, Course.get_all_instances().count(self)):
+            Course._instances.remove(self)
+                
 
     def change_time(self, start, end):
         """
@@ -129,50 +138,7 @@ class Course:
         for i in self.days:
             per_day.append((i, self.start, self.end))
         return per_day
-class Homework:
-    """
-    Defines objects as homework. Very similar to 
-    a course object, but it only has a single time
-    and it has a due date.
-    """
-    
-    _instances = {}
-    
-    def __init__(info):
-        self.name = info[0]
-        self.time = info[1]
-        self.date = [info[2]]
-        
-        for i in self.date:
-            if i in Homework._instances:
-                Homework._instances[i].append(self)
-            else:
-                Homework._instances[i]=[self]
-    def get_homework_name(self):
-        """
-        Returns the name of the assignment
-        """
-        return self.name
-    
-    def get_due_date(self):
-        """
-        Returns the due date of the assignment
-        """
-        return self.date
 
-    def get_assignment_time(self):
-        """
-        Returns amount of time required
-        to do assignment
-        """
-        return self.time
-    def get_all_instances():
-        """
-        Gets all instances of Course class, allows
-        for you to be able to find all possible
-        courses in current schedule
-        """
-        return [i for i in Homework._instances]
 def get_all_times():
     """
     Returns a dictionary with the days of
@@ -184,36 +150,33 @@ def get_all_times():
     """
     all_courses = Course.get_all_instances()
     all_homework = Homework.get_all_instances()
-    days_of_week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    days_of_week = {'Sunday': 0, 'Monday': 0, 'Tuesday': 0, 'Wednesday': 0, 'Thursday': 0, 'Friday': 0, 'Saturday': 0}
     courses = []
     homework = []
-    for i in all_courses:
-        for j in i:
-            if j not in courses:
-                courses.append(j)
-    for i in all_homework:
-        for j in i:
-            if j not in homework:
-                homework.append(j)
+    for j in all_courses:
+        if j not in courses:
+            courses.append(j)
+    for j in all_homework:
+        if j not in homework:
+            homework.append(j)
     
     for i in courses:
-        pass
-
-def save_homework():
-    """
-    Saves all objects of type Homework into
-    a text file separate from the storing of
-    the courses due to different requirements
-    """
-    all_homework = Homework.get_all_instances()
-    opened = open("save_homework.txt", 'w')
+        for j in i.days:
+            days_of_week[j] = days_of_week[j] + (i.end-i.start)
+    for i in homework:
+        for j in i.days:
+            days_of_week[j] = days_of_week[j] + (i.end-i.start)
     
+    return days_of_week
+            
+
 
 def save():
     """
     Saves all objects that exist as instances of a Course
     object. Called whenever you wish to save.
     """
+    print(get_all_times())
 
     #retrieve all instances of courses to save
     courses = Course.get_all_instances()
@@ -242,10 +205,6 @@ def save():
     #close file, saves memory
     opened.close()
             
-def save_homework():
-    """
-    """
-
 def load():
     """
     Loads from a text file as many previously used
