@@ -146,6 +146,7 @@ class ScheduleFrame():
 				i.destroy()
 			self._topname = False
 			self._tophalf_busy = False
+			self._name_appt = self._bottomname.cget('text')
 			self._tophalf.configure(background=color)
 
 		if bottom == True:
@@ -153,6 +154,7 @@ class ScheduleFrame():
 				i.destroy()
 			self._bottomname = False
 			self._bottomhalf_busy = False
+			self._name_appt = self._topname.cget('text')
 			self._bottomhalf.configure(background=color)
 
 
@@ -190,6 +192,7 @@ class ScheduleFrame():
 		for w in self._frame.grid_slaves():
 			w.destroy()
 		self._name = False
+		self._name_appt = None
 		self._topname = False
 		self._bottomname = False
 		self._tophalf_busy = False
