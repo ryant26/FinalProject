@@ -20,7 +20,7 @@ class Course:
     """
 
 
-    _instances = {}
+    _instances = []
 
     def __init__(self, info, free = False):
         self.name = info[0]
@@ -34,11 +34,7 @@ class Course:
         self.free = free
 
         # insert into collection of instances
-        for i in self.days:
-            if i in Course._instances:
-                Course._instances[i].append(self)
-            else:
-                Course._instances[i]=[self]
+        Course._instances.append(self)
 
     def get_name(self):
         """
@@ -70,7 +66,7 @@ class Course:
         for you to be able to find all possible
         courses in current schedule
         """
-        return [i for i in Course._instances.values()]
+        return [i for i in Course._instances]
 
     def del_instance(self):
         """
@@ -177,7 +173,7 @@ class Homework:
         for you to be able to find all possible
         courses in current schedule
         """
-        return [i for i in Homework._instances.values()]
+        return [i for i in Homework._instances]
 def get_all_times():
     """
     Returns a dictionary with the days of
@@ -201,7 +197,8 @@ def get_all_times():
             if j not in homework:
                 homework.append(j)
     
-    for i in courses
+    for i in courses:
+        pass
 
 def save_homework():
     """
@@ -227,29 +224,28 @@ def save():
     for j in courses:
         if j not in saved:
             saved.append(j)
-    for j in saved:
+    for i in saved:
         #remove nested list to get to the object
-        for i in j:
             #formatting, saves it very specifically
-            st_start = str(i.start)
-            st_end = str(i.end)
-            opened.write(i.name)
-            opened.write(': ')
-            opened.write(st_start)
+        st_start = str(i.start)
+        st_end = str(i.end)
+        opened.write(i.name)
+        opened.write(': ')
+        opened.write(st_start)
+        opened.write(' ')
+        opened.write(st_end)
+        opened.write(': ')
+        for x in i.days:
+            opened.write(x)
             opened.write(' ')
-            opened.write(st_end)
-            opened.write(': ')
-            for x in i.days:
-                opened.write(x)
-                opened.write(' ')
-            opened.write(':')
-            opened.write('\n')
+        opened.write(':')
+        opened.write('\n')
     #close file, saves memory
     opened.close()
             
 def save_homework():
     """
-    
+    """
 
 def load():
     """
