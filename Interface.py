@@ -467,13 +467,18 @@ def Calc_HW(HW_name, HW_time, HW_due):
         course.save()
 
 def avail_time(Day):
+    """
+    Used to find open time on the day passed. Creates a list
+    of start and a list of end times and compares the lists. 
+    If the time is not in both lists, then there is an open start time.
+    Returns a list of available start time on the day passed.
+    """
     courses = course.Course.get_all_instances()
     time_starts = [ ]
     time_ends = [ ]
     avail_hours = [ ]
     for i in courses:
         if Day in i.days:
-
             time_starts.append(i.start)
             time_ends.append(i.end)
     for j in time_ends:
