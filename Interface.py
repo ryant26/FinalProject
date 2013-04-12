@@ -1,4 +1,17 @@
 """
+CMPUT 297/115 - Final Project - Due 2013-04-12
+
+    Version 1.0 2013-04-12
+
+    By: Cody Otto
+        Brittany Lamorie
+        Ryan Thornhill
+
+    This assignment has been done under the full collaboration model,
+    and any extra resources are cited in the code below.
+
+"""
+"""
 This is the file that containes all of the code for the main interface 
 """
 from tkinter import *
@@ -54,7 +67,7 @@ class ScheduleFrame():
 		self._name = None
 		self._topname = None
 		self._bottomname = None
-		self._name_appt = None
+		self._name_appt = "Enter Class Name"
 		parent.title(string= "Schedule Builder")
 
 
@@ -85,9 +98,7 @@ class ScheduleFrame():
 		"""
 		This funciton calles the appointment editor. If one is currently open 
 		it will destroy the currently open editor and create a new one.
-		"""
-		#this should be replaced by the caller to Brittany's code 
-		#find a better solution than putting it twice? 
+		""" 
 		global appointment_editor
 		if appointment_editor == None:
 			MenuWin(self._name_appt, (str(self._start_time)+':00', str(self._end_time)+':00'), [self._day])
@@ -201,7 +212,8 @@ class ScheduleFrame():
 
 def MenuWin(name_c, time_list, day_list):
     """
-	Initializes the toplevel menu window, calling each seperate function that
+	Initializes the toplevel menu window, calling each seperate function to create the 
+    widgets on the menu. 
     """
     win = Toplevel()
     win.title(string= "Class Editor")
@@ -211,28 +223,37 @@ def MenuWin(name_c, time_list, day_list):
     Days = set_days(win, day_list)
     Times = set_times(win, time_list)
     save = Button(win, text = "SAVE", command = lambda: save_contents(course_name, Times, Days))
-    save.grid(column=5, row=6)
+    save.grid(column=5, row=6) 
     clear = Button(win, text = "CLEAR", command = lambda: clear_contents(Days, course_name, Times))
     clear.grid(column=3, row=6)
     delete =  Button(win, text = "DELETE", command = lambda: delete_contents(Days, course_name, Times) )
     delete.grid(column=2, row=6)
 
 def HW_win():
+    """
+    Creates another toplevel menu window used to add assignments to the schedule
+    this function call similar functions to the initial menu window create the widgets 
+    for this menu.
+    """
     HW = Toplevel()
     HW.title(string= "Homework Assignment")
     HW_ttl = Label(HW, text = "Assignment Information")
     HW_ttl.grid(column=1, row=0, pady=5)
-    HW_name = Course_Input(HW, "Enter Assingment Title")
+    HW_name = Course_Input(HW, "Enter Assignment Title")
     HW_due = set_days(HW, [ ])
     HW_time = StringVar()
     HW_time_Lab = Label(HW, text = "Approximate Time for Completion(In hours)")
     HW_time_Lab.grid(column=0, row=5, columnspan=2)
     HW_time_sel = OptionMenu(HW, HW_time, '1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
-    HW_time_sel.grid(column=2, row=5)
+    HW_time_sel.grid(column=2, row=5) #A different oprtion menu was created for this window so that the hours needed could be saved
     save = Button(HW, text = "SAVE", command = lambda: Calc_HW(HW_name, HW_time, HW_due))
     save.grid(column=5, row=6)
 
 def Course_Input(win, title):
+    """
+    This function creates the input widget on each menu and label on each menu.
+    It return the string variable containing the name of the course or assignment
+    """
     name = Label(win, text = "Name:")
     name.grid(column=0, row=2)
     enter = Entry(win, relief = 'sunken')
@@ -244,6 +265,10 @@ def Course_Input(win, title):
     return course
 
 def set_days(win, day_list):
+    """
+    Creates the checkbutton widgets on both menus. It returns the dictionary
+    of Days of the week with the state of each check button as it's items.
+    """
     Days = {
         'Sunday':0,
         'Monday':0,
@@ -256,18 +281,26 @@ def set_days(win, day_list):
             
 
     List_Days = [ 'Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    #The list is used to label the check buttons in proper order
     counter=0
     for key in List_Days:
         Days[key] = IntVar()
         if key in day_list:
+            #When the frame is double clicked to open a menu the day is sent to
+            #this function so that the menu is set to the proper day
             Days[key].set(1)
         CheckBox = Checkbutton(win, text = key, variable = Days[key])
         CheckBox.grid(column=counter, row=3)
+        #Counter is used to unpack the checkbutton in order without over lap
         counter = counter + 1
 
     return Days
 
 def set_times(win, time_list):
+    """
+    Creates the option menus for start and end times of the courses added. Returns a tuple containing
+    both start and end time variables.
+    """
     (start_time, end_time) = time_list
     time_1 = StringVar()
     time_1.set(start_time)
@@ -290,79 +323,15 @@ def set_times(win, time_list):
     
     return time_list
 
-def save_contents(course_name, Times, Days):
-    info = get_contents(course_name, Times, Days)
-    for i in course.Course.get_all_instances():
-    	if info[1][0] > i.get_start_time() and info[1][0] < i.get_end_time():
-    		for j in info[2]:
-    			if j in i.get_days():
-    				return None
-    	elif info[1][1] > i.get_start_time() and info[1][1] < i.get_end_time():
-    		for j in info[2]:
-    			if j in i.get_days():
-    				return None
-    	elif info[1][0] == i.get_start_time():
-    		for j in info[2]:
-    			if j in i.get_days():
-    				return None
-    clear_contents(Days, course_name, Times)
-    app = course.Course((info))
-    for i in app.get_days():
-        markBusy(app.get_name(), app.get_start_time(), app.get_end_time(), i, app.get_color())
-
-    course.save()
-
-    
-def get_HW(HW_name, HW_time, HW_due):
-    name_HW = HW_name.get()
-    for key, value in HW_due.items():
-        state = value.get()
-        if state != 0:
-            Due_day = key
-    hours = HW_time.get()
-    hours = float(hours)
-    HW_info = (name_HW, hours, Due_day)
-
-    return HW_info
- 
-def Calc_HW(HW_name, HW_time, HW_due):
-    (name_HW, hours, Due_day) = get_HW(HW_name, HW_time, HW_due)
-    color = course.color_rand()
-
-    while hours:
-        Work_time = course.get_all_times()    
-        if Due_day in Work_time:
-            Work_time.pop(Due_day)
-        (cur_day, time) = min(Work_time.items(), key = lambda x: x[1])
-        avail_hours = avail_time(cur_day)
-        if avail_hours == [ ]:
-            avail_hours = [10.0]
-        
-        markBusy(name_HW, avail_hours[0], avail_hours[0] + .5, cur_day, color)
-        course.Course((name_HW, [avail_hours[0], avail_hours[0] + .5], [cur_day]), color=color)
-        Work_time[cur_day] = Work_time[cur_day] + 2
-        hours = hours - .5
-        course.save()
-
-def avail_time(Day):
-    courses = course.Course.get_all_instances()
-    time_starts = [ ]
-    time_ends = [ ]
-    avail_hours = [ ]
-    for i in courses:
-        if Day in i.days:
-
-            time_starts.append(i.start)
-            time_ends.append(i.end)
-    for j in time_ends:
-        if j in time_starts: continue
-        else:
-            avail_hours.append(j)
-
-
-    return avail_hours
-    
 def get_contents(course_name, Times, Days):
+    """
+    Retrieves variable values from each set of widgets on
+    the course menu. The time values are originally strings
+    but are used as floats in other functions, the conversion to
+    proper format is found here. Returns a string for the name
+    of the course, a tuple of floats for the times and a list of
+    strings for the days.
+    """
     name_c = course_name.get()
     day_list = [ ]
     for key, value in Days.items():
@@ -391,6 +360,10 @@ def get_contents(course_name, Times, Days):
     return info
     
 def clear_contents(Days, course_name, Times):
+    """
+    Sets the variable of each widgets on the course menu
+    to the original settings.
+    """
     course_name.set('Enter Class Name')
     (time_1, time_2) = Times
     for key, value in Days.items():
@@ -399,6 +372,103 @@ def clear_contents(Days, course_name, Times):
     time_2.set('12:00')
     for key, value in Days.items():
         Days[key].set(0)
+
+def save_contents(course_name, Times, Days):
+    """
+    Retrieves informationg containing name, day and times, from the function
+    get contents. Checks if this day and time is already taken in the 
+    schedule, if it is your addition will not be added. Creates a course type
+    object using the information from get_contents and puts it visually 
+    on the schedule. Also calls save, so that the new object can be saved
+    in the text current text file. 
+    """
+    info = get_contents(course_name, Times, Days)
+    for i in course.Course.get_all_instances():
+    	if info[1][0] > i.get_start_time() and info[1][0] < i.get_end_time():
+    		for j in info[2]:
+    			if j in i.get_days():
+    				return None
+    	elif info[1][1] > i.get_start_time() and info[1][1] < i.get_end_time():
+    		for j in info[2]:
+    			if j in i.get_days():
+    				return None
+    	elif info[1][0] == i.get_start_time():
+    		for j in info[2]:
+    			if j in i.get_days():
+    				return None
+    clear_contents(Days, course_name, Times)
+    app = course.Course((info))
+    for i in app.get_days():
+        markBusy(app.get_name(), app.get_start_time(), app.get_end_time(), i, app.get_color())
+
+    course.save()
+
+    
+def get_HW(HW_name, HW_time, HW_due):
+    """
+    Similar to get_contents, used to retrieve the values
+    of the widget's variable on the Assignment menu. Because
+    of the different option menu, the same get_contents could not
+    be used twice.
+    """
+    name_HW = HW_name.get()
+    for key, value in HW_due.items():
+        state = value.get()
+        if state != 0:
+            Due_day = key
+    hours = HW_time.get()
+    hours = float(hours)
+    HW_info = (name_HW, hours, Due_day)
+
+    return HW_info
+ 
+def Calc_HW(HW_name, HW_time, HW_due):
+    """
+    This sets the times and days that the newly entered assignment should be
+    completed in. Using the function get_all_times from course to get
+    a dictionary of days of the week with the number of busy hours, and finding all
+    availble time on the day with the least busy hours, we are able to evenly spread 
+    out work throughout the week. Note: This is set up best for weekly assignments.
+    """
+    (name_HW, hours, Due_day) = get_HW(HW_name, HW_time, HW_due)
+    color = course.color_rand()
+
+    while hours:
+        Work_time = course.get_all_times()    
+        if Due_day in Work_time:
+            #So that work on the due date is not set, it is eliminated fromt he dictionary
+            Work_time.pop(Due_day)
+        (cur_day, time) = min(Work_time.items(), key = lambda x: x[1])
+        avail_hours = avail_time(cur_day)
+        if avail_hours == [ ]:
+            #If the least busy day has no work hours, homework will not be scheduled till ten
+            avail_hours = [10.0]
+            #This could be made a variable and set by the user
+        course.Course((name_HW, [avail_hours[0], avail_hours[0] + .5], [cur_day]), color=color)
+        #Each half hour of work is its own object
+        markBusy(name_HW, avail_hours[0], avail_hours[0] + .5, cur_day, color)
+        hours = hours - .5
+        #This also is used to save the assignment objects in the text file
+        course.save()
+
+def avail_time(Day):
+    courses = course.Course.get_all_instances()
+    time_starts = [ ]
+    time_ends = [ ]
+    avail_hours = [ ]
+    for i in courses:
+        if Day in i.days:
+
+            time_starts.append(i.start)
+            time_ends.append(i.end)
+    for j in time_ends:
+        if j in time_starts: continue
+        else:
+            avail_hours.append(j)
+
+
+    return avail_hours
+    
 
 def delete_contents(Days, course_name, Times):
 	#convert all strings to values we can use!
