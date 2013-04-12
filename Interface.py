@@ -146,23 +146,33 @@ class ScheduleFrame():
 		"""
 		global schedule
 
+		#reset the background color 
 		color = 'white'
+
+		#Fill the whole frame
 		if top == False and bottom == False:
 			for i in self._frame.grid_slaves():
 				i.destroy()
 			self._frame.configure(background=color)
 
+		#Just fill the top
 		if top == True:
+			#destory all frames inside main frame
 			for i in self._tophalf.grid_slaves():
 				i.destroy()
+
+			#reset the labels
 			self._topname = False
 			self._tophalf_busy = False
 			self._name_appt = self._bottomname.cget('text')
 			self._tophalf.configure(background=color)
 
+		#Just fill the bottom
 		if bottom == True:
+			#Destroy all frames inside main frame
 			for i in self._bottomhalf.grid_slaves():
 				i.destroy()
+			#Reset all labels
 			self._bottomname = False
 			self._bottomhalf_busy = False
 			self._name_appt = self._topname.cget('text')
@@ -190,6 +200,8 @@ class ScheduleFrame():
 		#Set up the two split frames to take up half the area of the main frame
 		self._tophalf.grid(column=0, row=0, sticky='nsew')
 		self._bottomhalf.grid(column=0, row=1, sticky='nsew')
+
+		#Set resize options 
 		self._tophalf.columnconfigure(0, minsize=70, weight=1)
 		self._tophalf.rowconfigure(0, minsize=25, weight=1)
 		self._bottomhalf.columnconfigure(0, minsize=70, weight=1)
@@ -200,8 +212,11 @@ class ScheduleFrame():
 		"""
 		If we no longer need the frame to be split, this can be called to destroy the split
 		"""
+		#Destory everythin inside the main frame
 		for w in self._frame.grid_slaves():
 			w.destroy()
+
+		#Reset all possible labels that could have been set
 		self._name = False
 		self._name_appt = None
 		self._topname = False
@@ -588,8 +603,10 @@ def appointmentEditor():
 	it will destroy the currently open editor and create a new one.
 	"""
 	global appointment_editor
+	#If there isn't an appointment editor currently open, open a new one
 	if appointment_editor == None:
 		MenuWin("Enter Class Name",('8:00', '12:00'), [ ])
+	#If there is, destory it and open a new one
 	else:
 		appointment_editor.destroy()
 		appointment_editor = Toplevel(root)
@@ -599,12 +616,16 @@ def loadText():
 	"""
 	This function loads in the text file, supposed to be called at the beggining of the program
 	"""
+	#Define a list the holds all the current elements 
 	courses_loaded = []
+	#Load all the course from the text file
 	course.load()
+
+	#Add all the new loaded appointments to the schedule Interface
 	for i in course.Course.get_all_instances():
-		if i not in courses_loaded:
+		if i not in courses_loaded:				#Don't want to add duplicates 
 			courses_loaded.append(i)
-			for x in i.get_days():
+			for x in i.get_days():				#Have to add a course for each day it runs
 				markBusy(i.get_name(), i.get_start_time(), i.get_end_time(), x, i.get_color())
 
 #-----------------------------------------------------Body of Code -------------------------------------------------------------------------
@@ -645,10 +666,8 @@ for i in range(number_of_days):
 for i in range(hours_in_day):
 	ttk.Label(text=str(i+8)+':00').grid(column=0, row=i+2)		
 
-#----------------------------------------------TEST CODE -------------------------------------------------------
-"""
-This is the test code section because scrolling through all of cody's doctests is probably the most painfull experience of my life
-"""
+#----------------------------------------------Runtime -------------------------------------------------------
+#Load in existing appointments 
 loadText()
 #-----------------------------------------re-size settings-----------------------------------------------
 
@@ -660,8 +679,10 @@ for i in range(grid_row_max+1):
 
 #------------------------------------------grid all widgets------------------------------------------------
 
-#button
+#buttons
 create_new.grid(column= 0, row=0)
 HW_Button.grid(column=0, row=1)
+
+#Main window
 root.title(string='Scheduler')
 root.mainloop()	
