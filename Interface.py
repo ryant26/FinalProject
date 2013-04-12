@@ -10,9 +10,10 @@ CMPUT 297/115 - Final Project - Due 2013-04-12
     This assignment has been done under the full collaboration model,
     and any extra resources are cited in the code below.
 
-"""
-"""
-This is the file that containes all of the code for the main interface 
+    This is the file that containes all of the code for the main interface 
+    and the toplevel windows called by the two buttons on the left hand side
+    of the main interface.
+
 """
 from tkinter import *
 from tkinter import ttk
@@ -231,12 +232,14 @@ def MenuWin(name_c, time_list, day_list):
     widgets on the menu. 
     """
     win = Toplevel()
+    #Add a title to the window
     win.title(string= "Class Editor")
     menu_ttl = Label(win, text = "Course Information")
     menu_ttl.grid(column=1, row=0, pady=5)
     course_name = Course_Input(win, name_c)
     Days = set_days(win, day_list)
     Times = set_times(win, time_list)
+    #Create buttons for saving, deleting and clearing the widgets
     save = Button(win, text = "SAVE", command = lambda: save_contents(course_name, Times, Days))
     save.grid(column=5, row=6) 
     clear = Button(win, text = "CLEAR", command = lambda: clear_contents(Days, course_name, Times))
@@ -251,16 +254,18 @@ def HW_win():
     for this menu.
     """
     HW = Toplevel()
+    #Add a title to the window
     HW.title(string= "Homework Assignment")
     HW_ttl = Label(HW, text = "Assignment Information")
     HW_ttl.grid(column=1, row=0, pady=5)
     HW_name = Course_Input(HW, "Enter Assignment Title")
     HW_due = set_days(HW, [ ])
+    #Assign a variable to the contents of the option menu
     HW_time = StringVar()
     HW_time_Lab = Label(HW, text = "Approximate Time for Completion(In hours)")
     HW_time_Lab.grid(column=0, row=5, columnspan=2)
     HW_time_sel = OptionMenu(HW, HW_time, '1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
-    HW_time_sel.grid(column=2, row=5) #A different oprtion menu was created for this window so that the hours needed could be saved
+    HW_time_sel.grid(column=2, row=5) #A different option menu was created for this window so that the hours to completion could be saved
     save = Button(HW, text = "SAVE", command = lambda: Calc_HW(HW_name, HW_time, HW_due))
     save.grid(column=5, row=6)
 
@@ -272,6 +277,7 @@ def Course_Input(win, title):
     name = Label(win, text = "Name:")
     name.grid(column=0, row=2)
     enter = Entry(win, relief = 'sunken')
+    #Assigns a variable to the contents of the entry widget
     course = StringVar()
     course.set(title)
     enter["textvariable"] = course
@@ -284,6 +290,7 @@ def set_days(win, day_list):
     Creates the checkbutton widgets on both menus. It returns the dictionary
     of Days of the week with the state of each check button as it's items.
     """
+    #Create a dictionary for the days of the week and the state of the corresponding checkbutton
     Days = {
         'Sunday':0,
         'Monday':0,
@@ -294,11 +301,11 @@ def set_days(win, day_list):
         'Sunday':0
         }
             
-
-    List_Days = [ 'Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     #The list is used to label the check buttons in proper order
-    counter=0
+    List_Days = [ 'Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    counter=0 
     for key in List_Days:
+        #Initialize the item of each day as the checkbutton variable
         Days[key] = IntVar()
         if key in day_list:
             #When the frame is double clicked to open a menu the day is sent to
@@ -306,7 +313,7 @@ def set_days(win, day_list):
             Days[key].set(1)
         CheckBox = Checkbutton(win, text = key, variable = Days[key])
         CheckBox.grid(column=counter, row=3)
-        #Counter is used to unpack the checkbutton in order without over lap
+        #Counter is used to unpack the checkbuttons in order, without over lap
         counter = counter + 1
 
     return Days
@@ -317,20 +324,21 @@ def set_times(win, time_list):
     both start and end time variables.
     """
     (start_time, end_time) = time_list
+    #Set the variables of the option menu
     time_1 = StringVar()
     time_1.set(start_time)
     start = Label(win, text = "Enter Start Time:")
     start.grid(column=0, row=4)
-
+    #Creates a widget for the start times
     time_start = OptionMenu(win, time_1, '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30')
     time_start.grid(column=1, row=4)
 
-
+    #Set the variables of the option menu
     time_2 = StringVar()
     time_2.set(end_time)
     end = Label(win, text = "Enter End Time:")
     end.grid(column=0, row=5)
-    
+    #Creates a widget for the start times
     time_end = OptionMenu(win, time_2, '8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00')
     time_end.grid(column=1, row=5)
 
@@ -349,17 +357,24 @@ def get_contents(course_name, Times, Days):
     """
     name_c = course_name.get()
     day_list = [ ]
+    #Iterates throught the items of the Days dictionary
     for key, value in Days.items():
+        #Sets the item as the state of checkbutton
         state = value.get()
+        #If the checkbutton is checked, the day is added to the list
         if state != 0:
             day_list.append(key)
+            #The checkbutton is then reset
             Days[key].set(0)
+    
     (time_1, time_2) = Times
+    #The variables from the option menus are retrieved
     time_start = time_1.get()
     time_end = time_2.get()
-
+    #These variables are strings and must be altered before being used
     start = time_start.split(':')
     end = time_end.split(':')
+    #Half hours are converted to .5 increments of the whole hour
     if start[1] != '00':
         start = start[0] +'.5'
     else:
@@ -368,6 +383,7 @@ def get_contents(course_name, Times, Days):
         end = end[0] + '.5'
     else: 
         end = end[0]
+    #These strings are now converted to floats
     start = float(start)
     end = float(end)
     time_list = (start, end)
@@ -381,12 +397,11 @@ def clear_contents(Days, course_name, Times):
     """
     course_name.set('Enter Class Name')
     (time_1, time_2) = Times
+    #Iterates through the Dictionary unchecking each button
     for key, value in Days.items():
         Days[key].set(0)
     time_1.set('8:00')
     time_2.set('12:00')
-    for key, value in Days.items():
-        Days[key].set(0)
 
 def save_contents(course_name, Times, Days):
     """
@@ -400,19 +415,23 @@ def save_contents(course_name, Times, Days):
     info = get_contents(course_name, Times, Days)
     for i in course.Course.get_all_instances():
     	if info[1][0] > i.get_start_time() and info[1][0] < i.get_end_time():
+            #Checks if the start time to be added is within any of the busy times 
     		for j in info[2]:
     			if j in i.get_days():
     				return None
     	elif info[1][1] > i.get_start_time() and info[1][1] < i.get_end_time():
+            #Checks if the end time to be added is within any of the busy times 
     		for j in info[2]:
     			if j in i.get_days():
     				return None
     	elif info[1][0] == i.get_start_time():
+            #Checks if the start time to be added is the same as other start times 
     		for j in info[2]:
     			if j in i.get_days():
     				return None
     clear_contents(Days, course_name, Times)
     app = course.Course((info))
+    #Adds each day of busy time to the schedule
     for i in app.get_days():
         markBusy(app.get_name(), app.get_start_time(), app.get_end_time(), i, app.get_color())
 
@@ -427,10 +446,12 @@ def get_HW(HW_name, HW_time, HW_due):
     be used twice.
     """
     name_HW = HW_name.get()
+    #Iterate through the dictionary of days to get the checked buttons
     for key, value in HW_due.items():
         state = value.get()
         if state != 0:
             Due_day = key
+    #Get the time from the option menu and converts to a float
     hours = HW_time.get()
     hours = float(hours)
     HW_info = (name_HW, hours, Due_day)
@@ -473,14 +494,18 @@ def avail_time(Day):
     If the time is not in both lists, then there is an open start time.
     Returns a list of available start time on the day passed.
     """
+    #Retrieves each instance already saved
     courses = course.Course.get_all_instances()
     time_starts = [ ]
     time_ends = [ ]
     avail_hours = [ ]
+    #Iterates through each instance
     for i in courses:
+        #CReates lists of instances for the passed day
         if Day in i.days:
             time_starts.append(i.start)
             time_ends.append(i.end)
+    #Compares the start and end times to make one list of available start times
     for j in time_ends:
         if j in time_starts: continue
         else:

@@ -1,3 +1,16 @@
+"""
+CMPUT 297/115 - Final Project - Due 2013-04-12
+
+    Version 1.0 2013-04-12
+
+    By: Cody Otto
+        Brittany Lamorie
+        Ryan Thornhill
+
+    This assignment has been done under the full collaboration model,
+    and any extra resources are cited in the code below.
+
+"""
 import random
 
 
