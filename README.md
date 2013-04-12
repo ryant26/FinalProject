@@ -2,7 +2,7 @@ FinalProject: Scheduling Program
 ================================
 
 This is the scheduleing program created by:
--Birttany Lamorie
+-Brittany Lamorie
 -Cody Otto 
 -Ryan Thornhill
 
@@ -76,6 +76,6 @@ Deletion of an assignment works the same way as deletion of an appointment.
 Other Notes:
 ============
 
-When an appointmentor assignment is added to the scheduler it is also added to the save.txt. This means you can then close the program,
+When an appointment or assignment is added to the scheduler it is also added to the save.txt. This means you can then close the program,
 then re-open it and retain your current schedule information. One can also edit the save.txt them selfs. If you'd like to delete your entire schedule
 and start from scratch, simply clear the contents of save.txt. 
